@@ -23,7 +23,6 @@ github_username:  SteveXCIV
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-slate
 plugins:
   - jekyll-feed
 
