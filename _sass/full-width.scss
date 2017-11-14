@@ -28,13 +28,8 @@ Full-Width Styles
   border-bottom-right-radius: 2px;
 }
 
-#header_wrap {
-  background: #212121;
-  background: -moz-linear-gradient(top, #373737, #212121);
-  background: -webkit-linear-gradient(top, #373737, #212121);
-  background: -ms-linear-gradient(top, #373737, #212121);
-  background: -o-linear-gradient(top, #373737, #212121);
-  background: linear-gradient(top, #373737, #212121);
+#footer_wrap, #header_wrap {
+  background: $body-background-color;
 }
 
 #header_wrap .inner {
@@ -97,17 +92,14 @@ Full-Width Styles
 }
 
 #main_content_wrap {
-  background: #f2f2f2;
-  border-top: 1px solid #111;
-  border-bottom: 1px solid #111;
+  background: $background-color;
+  border-top: 1px solid $body-border-color;
+  border-bottom: 1px solid $body-border-color;
 }
 
 #main_content {
   padding-top: 40px;
 }
 
-#footer_wrap {
-  background: #212121;
-}
 
 
