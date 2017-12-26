@@ -7,7 +7,7 @@ body {
   color: $color;
   background: $body-background-color;
   font-size: 16px;
-  font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
+  font-family: $body-font;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -16,7 +16,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 10px 0;
   font-weight: 700;
   color: $header-color;
-  font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+  font-family: $header-font;
   letter-spacing: -1px;
 }
 
@@ -53,6 +53,7 @@ p {
 
 footer p {
   color: #f2f2f2;
+  font-family: $header-font;
 }
 
 a {
@@ -194,7 +195,7 @@ table {
  }
 
 th {
-  font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: $header-font;
   padding: 10px;
   background: #373737;
   color: #fff;
