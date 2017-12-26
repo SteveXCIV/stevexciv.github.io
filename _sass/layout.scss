@@ -81,6 +81,10 @@ a:hover, a:focus {
   text-decoration: underline;
 }
 
+a.post-title {
+    color: $header-color;
+}
+
 footer a {
   color: #F2F2F2;
   text-decoration: underline;
@@ -170,7 +174,7 @@ ul.post-list {
 
 .post-list > li {
     display: block;
-    padding: 1.1em 0.1em;
+    padding: 0.5em 0.1em;
     padding-bottom: 2em;
     background: url('../images/bg_hr.png') repeat-x bottom;
 }

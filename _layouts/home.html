@@ -14,6 +14,15 @@ layout: default
         </p>
     </li>
 {% endif %}
+{% for post in site.posts %}
+    <li>
+        <h3><a class="post-title" href="{{ post.url }}">{{ post.title }}</a></h3>
+        <p>
+            {{ post.excerpt | truncatewords: 64, "..." }}
+            <a href="{{ post.url }}"> read more.</a>
+        </p>
+    </li>
+{% endfor %}
 </ul>
 
 <span>Like what you see? <a href="{{ "/feed.xml" | relative_url }}">Subscribe via RSS</a>!</span>
