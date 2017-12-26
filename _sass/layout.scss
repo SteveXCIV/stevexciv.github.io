@@ -6,45 +6,49 @@ body {
   box-sizing: border-box;
   color: $color;
   background: $body-background-color;
-  font-size: 16px;
-  font-family: 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
+  font-size: $base-font-size;
+  font-family: $body-font;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 10px 0;
+  margin: 0.5em 0;
   font-weight: 700;
   color: $header-color;
-  font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+  font-family: $header-font;
   letter-spacing: -1px;
 }
 
 h1 {
-  font-size: 36px;
+  font-size: 2.4em;
   font-weight: 700;
 }
 
 h2 {
-  padding-bottom: 10px;
-  font-size: 32px;
+  padding-bottom: 0.4em;
+  font-size: 2.2em;
   background: url('../images/bg_hr.png') repeat-x bottom;
 }
 
+.section-title {
+    font-size: 2.4em;
+}
+
 h3 {
-  font-size: 24px;
+  font-size: 2em;
 }
 
 h4 {
-  font-size: 21px;
+  font-size: 1.8em;
 }
 
 h5 {
-  font-size: 18px;
+  font-size: 1.6em;
 }
 
 h6 {
-  font-size: 16px;
+  font-size: 1.4em;
 }
 
 p {
@@ -53,6 +57,7 @@ p {
 
 footer p {
   color: #f2f2f2;
+  font-family: $header-font;
 }
 
 a {
@@ -74,12 +79,19 @@ a {
 
 a:hover, a:focus {
   text-decoration: underline;
-  font-weight:bold;
+}
+
+a.post-title {
+    color: $header-color;
 }
 
 footer a {
   color: #F2F2F2;
   text-decoration: underline;
+}
+
+small {
+    font-size: 90%;
 }
 
 em, cite {
@@ -118,8 +130,7 @@ pre, code {
   color: #222;
   background-color: #fff;
 
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
-  font-size: 14px;
+  font-family: $code-font;
 
   border-radius: 2px;
   -moz-border-radius: 2px;
@@ -127,15 +138,13 @@ pre, code {
 }
 
 pre {
-  padding: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
+  padding: 0.5em;
+  box-shadow: 0 0 5px rgba(0,0,0,.1);
   overflow: auto;
 }
 
 code {
-  padding: 3px;
-  margin: 0 3px;
-  box-shadow: 0 0 10px rgba(0,0,0,.1);
+  box-shadow: 0 0 5px rgba(0,0,0,.1);
 }
 
 pre code {
@@ -145,26 +154,42 @@ pre code {
 
 blockquote {
   color: #666;
-  margin-bottom: 20px;
-  padding: 0 0 0 20px;
+  margin-bottom: 1em;
+  padding: 0 0 0 1em;
   border-left: 3px solid #bbb;
 }
 
 
 ul, ol, dl {
-  margin-bottom: 15px
+  margin-bottom: 0.9em;
 }
 
 ul {
   list-style-position: inside;
   list-style: disc;
-  padding-left: 20px;
+  padding-left: 1em;
+}
+
+ul.post-list {
+    list-style: none;
+    padding: 0px;
+}
+
+.post-list > li {
+    display: block;
+    padding: 0.5em 0.1em;
+    padding-bottom: 2em;
+    background: url('../images/bg_hr.png') repeat-x bottom;
+}
+
+.post-list > li:last-child {
+    background: none;
 }
 
 ol {
   list-style-position: inside;
   list-style: decimal;
-  padding-left: 20px;
+  padding-left: 1em;
 }
 
 dl dt {
@@ -172,12 +197,12 @@ dl dt {
 }
 
 dl dd {
-  padding-left: 20px;
+  padding-left: 1em;
   font-style: italic;
 }
 
 dl p {
-  padding-left: 20px;
+  padding-left: 1em;
   font-style: italic;
 }
 
@@ -190,12 +215,12 @@ hr {
 
 table {
   border: 1px solid #373737;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
   text-align: left;
  }
 
 th {
-  font-family: 'Lucida Grande', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: $header-font;
   padding: 10px;
   background: #373737;
   color: #fff;
@@ -208,6 +233,5 @@ td {
 
 form {
   background: #f2f2f2;
-  padding: 20px;
+  padding: 1em;
 }
-
