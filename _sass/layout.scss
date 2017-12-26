@@ -6,14 +6,14 @@ body {
   box-sizing: border-box;
   color: $color;
   background: $body-background-color;
-  font-size: 16px;
+  font-size: $base-font-size;
   font-family: $body-font;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  margin: 10px 0;
+  margin: 0.5em 0;
   font-weight: 700;
   color: $header-color;
   font-family: $header-font;
@@ -21,34 +21,34 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 36px;
+  font-size: 2.4em;
   font-weight: 700;
 }
 
 h2 {
-  padding-bottom: 10px;
-  font-size: 32px;
+  padding-bottom: 0.4em;
+  font-size: 2.2em;
   background: url('../images/bg_hr.png') repeat-x bottom;
 }
 
-h2.section-title {
-    font-size: 36px;
+.section-title {
+    font-size: 2.4em;
 }
 
 h3 {
-  font-size: 24px;
+  font-size: 2em;
 }
 
 h4 {
-  font-size: 21px;
+  font-size: 1.8em;
 }
 
 h5 {
-  font-size: 18px;
+  font-size: 1.6em;
 }
 
 h6 {
-  font-size: 16px;
+  font-size: 1.4em;
 }
 
 p {
@@ -90,8 +90,8 @@ footer a {
   text-decoration: underline;
 }
 
-.small {
-    font-size: 0.9em;
+small {
+    font-size: 90%;
 }
 
 em, cite {
@@ -131,7 +131,6 @@ pre, code {
   background-color: #fff;
 
   font-family: $code-font;
-  font-size: 14px;
 
   border-radius: 2px;
   -moz-border-radius: 2px;
@@ -139,7 +138,7 @@ pre, code {
 }
 
 pre {
-  padding: 10px;
+  padding: 0.5em;
   box-shadow: 0 0 5px rgba(0,0,0,.1);
   overflow: auto;
 }
@@ -155,20 +154,20 @@ pre code {
 
 blockquote {
   color: #666;
-  margin-bottom: 20px;
-  padding: 0 0 0 20px;
+  margin-bottom: 1em;
+  padding: 0 0 0 1em;
   border-left: 3px solid #bbb;
 }
 
 
 ul, ol, dl {
-  margin-bottom: 15px
+  margin-bottom: 0.9em;
 }
 
 ul {
   list-style-position: inside;
   list-style: disc;
-  padding-left: 20px;
+  padding-left: 1em;
 }
 
 ul.post-list {
@@ -190,7 +189,7 @@ ul.post-list {
 ol {
   list-style-position: inside;
   list-style: decimal;
-  padding-left: 20px;
+  padding-left: 1em;
 }
 
 dl dt {
@@ -198,12 +197,12 @@ dl dt {
 }
 
 dl dd {
-  padding-left: 20px;
+  padding-left: 1em;
   font-style: italic;
 }
 
 dl p {
-  padding-left: 20px;
+  padding-left: 1em;
   font-style: italic;
 }
 
@@ -216,7 +215,7 @@ hr {
 
 table {
   border: 1px solid #373737;
-  margin-bottom: 20px;
+  margin-bottom: 1em;
   text-align: left;
  }
 
@@ -234,5 +233,5 @@ td {
 
 form {
   background: #f2f2f2;
-  padding: 20px;
+  padding: 1em;
 }

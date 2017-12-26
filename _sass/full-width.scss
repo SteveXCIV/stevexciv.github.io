@@ -8,8 +8,8 @@ Full-Width Styles
 
 .inner {
   position: relative;
-  max-width: 640px;
-  padding: 20px 10px;
+  max-width: $content-max-width;
+  padding: 1em 0.6em;
   margin: 0 auto;
 }
 
@@ -34,7 +34,7 @@ Full-Width Styles
 }
 
 #header_wrap .inner {
-  padding: 50px 10px 30px 10px;
+  padding: 3em 0.5em 1em 0.5em;
 }
 
 #project_title {
@@ -99,5 +99,5 @@ Full-Width Styles
 }
 
 #main_content {
-  padding-top: 40px;
+  padding-top: 0.5em;
 }
