@@ -5,4 +5,3 @@
 layout: home
 ---
 
-#### Website Intentionally Blank (Content Coming Soon)
