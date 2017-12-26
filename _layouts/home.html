@@ -1,0 +1,19 @@
+---
+layout: default
+---
+
+{{ content }}
+
+<h2 class="section-title">Posts</h2>
+
+<ul class="post-list">
+{% if site.posts.size == 0 %}
+    <li>
+        <p>
+            Looks like there's nothing here!
+        </p>
+    </li>
+{% endif %}
+</ul>
+
+<span>Like what you see? <a href="{{ "/feed.xml" | relative_url }}">Subscribe via RSS</a>!</span>

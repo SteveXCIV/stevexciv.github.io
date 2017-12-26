@@ -31,6 +31,10 @@ h2 {
   background: url('../images/bg_hr.png') repeat-x bottom;
 }
 
+h2.section-title {
+    font-size: 36px;
+}
+
 h3 {
   font-size: 24px;
 }
@@ -157,6 +161,22 @@ ul {
   list-style-position: inside;
   list-style: disc;
   padding-left: 20px;
+}
+
+ul.post-list {
+    list-style: none;
+    padding: 0px;
+}
+
+.post-list > li {
+    display: block;
+    padding: 1.1em 0.1em;
+    padding-bottom: 2em;
+    background: url('../images/bg_hr.png') repeat-x bottom;
+}
+
+.post-list > li:last-child {
+    background: none;
 }
 
 ol {
