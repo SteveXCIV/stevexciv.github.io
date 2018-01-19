@@ -1,0 +1,9 @@
+$footer-height: 60px;
+
+.footer {
+    position: absolute;
+    height: $footer-height;
+    line-height: $footer-height;
+    bottom: 0;
+    width: 100%;
+}
