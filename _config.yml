@@ -18,13 +18,19 @@ email: stevexciv@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
     The adventures and musings of software engineer Steve Troetti.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  SteveXCIV
+url: "https://stevexciv.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+github_username: SteveXCIV
 
 # Remote theme
 remote_theme: sylhare/Type-on-Strap
 
+# Customizations
+paginate: 5
+header_text: Steve Troetti's blog about programming, technology, and occasionally homebrewing.
+footer_text: Copyright 2018-2019 Steve Troetti
+
 # Build settings
+katex: true
 markdown: kramdown
 plugins:
   - jekyll-feed
