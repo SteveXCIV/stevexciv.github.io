@@ -1,0 +1,19 @@
+---
+layout: default
+---
+
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <h2>{{ page.title }}</h2>
+      <p class="small text-muted">
+        Posted {{ page.date | date_to_string }} by {{ page.author | default: site.github.owner_name }}
+      </p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      {{ content }}
+    </div>
+  </div>
+</div>

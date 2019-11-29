@@ -1,0 +1,11 @@
+---
+layout: post
+title: It's the end of my custom theme (and I feel fine)
+date: 2018-01-18 22:22 -0500
+---
+
+After a long day at work, I came home and headed to my room. I pulled out my laptop, and immediately began hacking away at this website. I hadn't touched my blog in weeks, but my New Year's resolution was to do more projects in 2018, and write about them. I suppose that my interest in web technologies had also been recently reinvigorated. Last week, I had finished a project at work that I was quite satisfied with. I'd managed to get our team's codebase to support compile-time documentation generation (woo! documentation!).
+
+One of the things I needed to do was customize the default templates for the documentation pages. Unfortunately the default template didn't scale all that well to large codebases, resulting in some "interesting" (broken) behavior when rendering navigation elements for the many classes in the repository. Once I had dealt with that issue, I showed it to a teammate, who suggested a few more helpful features. Before I knew it, I was once again knee-deep in HTML, CSS, and JavaScript. I say "once again", because I took a full-stack web dev course a few years ago, and while it was fun, I never really did anything with the skills I picked up. This particular afternoon was different though, because it all came back to me, and I was able to recall *just how very enjoyable* this kind of work can be.
+
+Cut to me, sitting in my apartment on a Thursday evening, laptop out, tapping away on my keyboard. Now the first thing I did was tear out my custom theme, that was forked from the original theme that comes with Jekyll, the site generator I use. Next, I wove in the latest Bootstrap. Yes, I used an out-of-the-box CSS framework instead of my custom theme (gasp!). Back when I took my web dev course, I spent many hours pouring effort into customizing the framework we started with (which was also Bootstrap, albeit an earlier version). I have no doubts in my mind that I'll end up doing the same thing here. But for now, I'd like to focus my attention on whatever project I decide on and end up blogging about. Eventually, I'm going to make some changes to make this blog feel more my own. But for now, it's the end of my custom theme, and I feel fine. Until next time.
