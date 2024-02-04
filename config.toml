@@ -4,6 +4,9 @@ base_url = "https://www.stevexciv.com"
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = true
 
+# language
+default_language = "en"
+
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
 
@@ -20,3 +23,6 @@ highlight_code = true
 
 [extra]
 # Put all your custom variables here
+default_theme = "dark"
+theme_switcher = false
+skin = "lowcontrast_orange"
