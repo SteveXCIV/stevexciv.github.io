@@ -13,8 +13,13 @@ build_search_index = true
 # set theme
 theme = "tabi"
 
+browser_theme_color = "#ec984f"
+
 # homepage title
 title = "Steve Troetti's Blog"
+
+# enable tags
+taxonomies = [{ name = "tags", feed = true }]
 
 [markdown]
 # Whether to do syntax highlighting
@@ -26,3 +31,29 @@ highlight_code = true
 default_theme = "dark"
 theme_switcher = false
 skin = "lowcontrast_orange"
+# navbar controls
+menu = [
+  { name = "blog", url = "blog", trailing_slash = true },
+  # { name = "archive", url = "archive", trailing_slash = true },
+  { name = "tags", url = "tags", trailing_slash = true },
+  # TODO: re-enable projects once I decide what to showcase
+  # { name = "projects", url = "projects", trailing_slash = true },
+  # { name = "about", url = "about", trailing_slash = true },
+]
+# top-of-page, TOC, etc.
+quick_navigation_buttons = true
+# copy button on code examples
+copy_button = true
+# math
+katex = true
+# footer links (see https://welpo.github.io/tabi/blog/mastering-tabi-settings/#footer)
+socials = [
+  { name = "github", url = "https://github.com/SteveXCIV/", icon = "github" },
+  { name = "linkedin", url = "https://www.linkedin.com/in/steve-troetti", icon = "linkedin" },
+]
+# RSS feed
+feed_icon = true
+# footer copyright
+copyright = "© $CURRENT_YEAR Steve Troetti $SEPARATOR Unless otherwise noted, the content in this website is available under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license."
+# put the site name _after_ the page name
+invert_title_order = true
