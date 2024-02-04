@@ -8,7 +8,7 @@ compile_sass = true
 build_search_index = true
 
 # set theme
-theme = "feather"
+theme = "tabi"
 
 # homepage title
 title = "Steve Troetti's Blog"
