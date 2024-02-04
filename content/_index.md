@@ -1,10 +1,11 @@
 +++
 title = "Home"
-paginate_by = 5
 template = "index.html"
 
 [extra]
 header = { title = "Hello! I'm Steve.", img = "images/profile.jpeg", img_alt = "Steve Troetti, the blog author" }
+section_path = "blog/_index.md"
+max_posts = 4
 +++
 
 I'm a software engineer that's been working professionally since 2015.

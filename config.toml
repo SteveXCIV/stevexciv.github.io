@@ -10,6 +10,11 @@ default_language = "en"
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
 
+# Atom/RSS
+generate_feed = true
+feed_filename = "rss.xml"
+author = "Steve Troetti"
+
 # set theme
 theme = "tabi"
 
