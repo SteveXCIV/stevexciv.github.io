@@ -55,6 +55,7 @@ katex = true
 socials = [
   { name = "github", url = "https://github.com/SteveXCIV/", icon = "github" },
   { name = "linkedin", url = "https://www.linkedin.com/in/steve-troetti", icon = "linkedin" },
+  { name = "mastodon", url = "https://mastodon.social/@stevexciv", icon = "mastodon" },
 ]
 # RSS feed
 feed_icon = true
