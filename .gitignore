@@ -1,2 +1,5 @@
 # build artifacts
 public/
+
+# ugh macos
+.DS_Store
