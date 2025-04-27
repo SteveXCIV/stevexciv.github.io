@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Steve Troetti&#x27;s Blog - zola</title>
+      <link>https://www.stevexciv.com</link>
+      <description></description>
+      <generator>Zola</generator>
+      <language>en</language>
+      <atom:link href="https://www.stevexciv.com/tags/zola/rss.xml" rel="self" type="application/rss+xml"/>
+      <lastBuildDate>Sun, 04 Feb 2024 00:00:00 +0000</lastBuildDate>
+      <item>
+          <title>Back to Blogging</title>
+          <pubDate>Sun, 04 Feb 2024 00:00:00 +0000</pubDate>
+          <author>Steve Troetti</author>
+          <link>https://www.stevexciv.com/blog/back-to-blogging/</link>
+          <guid>https://www.stevexciv.com/blog/back-to-blogging/</guid>
+          <description xml:base="https://www.stevexciv.com/blog/back-to-blogging/">&lt;h1 id=&quot;spring-cleaning&quot;&gt;&lt;a class=&quot;header-anchor no-hover-padding&quot; href=&quot;#spring-cleaning&quot; aria-label=&quot;Anchor link for: spring-cleaning&quot;&gt;&lt;span class=&quot;link-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+Spring Cleaning&lt;&#x2F;h1&gt;
+&lt;p&gt;I was recently going through my repositories and cleaning up old stuff I knew I
+probably wouldn&#x27;t touch again.
+It&#x27;s not spring yet, but I tend to get my fill of winter somewhere around the
+21st of December every year anyway, so I&#x27;ll allow myself to do some early spring
+cleaning.&lt;&#x2F;p&gt;
+&lt;p&gt;As I was going through my list of repositories, I saw the one that backs this
+site.
+The last time I had touched it was when I was about as surprised as everyone
+else to hear about the &lt;a href=&quot;https:&#x2F;&#x2F;blog.pragmaticengineer.com&#x2F;google-domains-to-shut-down&#x2F;&quot;&gt;untimely demise of Google Domains&lt;&#x2F;a&gt;.
+I opted to switch providers on hearing that news, and I needed to tweak repository
+settings when I was setting up the new CNAME records.
+Prior to that whole incident, I hadn&#x27;t touched my blog in &lt;em&gt;years&lt;&#x2F;em&gt;.
+Suffice to say it was getting a bit dusty.&lt;&#x2F;p&gt;
+&lt;p&gt;My only post on the old blog was about how I couldn&#x27;t make a Jekyll theme I liked
+so I just ended up choosing a default one.
+Well, things are a lot different now than when I wrote that.
+With GitHub supporting a full suite of CI&#x2F;CD goodies and having a pretty good
+free tier, Jekyll is far from the only (good) option for getting a site on GH
+pages.
+I never really knew much Ruby anyway, so it was right about that moment that I
+decided to seek out another static site generator (SSG).&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;enter-zola&quot;&gt;&lt;a class=&quot;header-anchor no-hover-padding&quot; href=&quot;#enter-zola&quot; aria-label=&quot;Anchor link for: enter-zola&quot;&gt;&lt;span class=&quot;link-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;&#x2F;span&gt;&lt;&#x2F;a&gt;
+Enter Zola&lt;&#x2F;h1&gt;
+&lt;p&gt;If the 🦀 crab emoji on my homepage&#x27;s &quot;about me&quot; blurb didn&#x27;t give it away, I
+like Rust.
+Not the reddish brown stuff that weathers ferrous items, but the programming
+language that &lt;a href=&quot;https:&#x2F;&#x2F;github.blog&#x2F;2023-08-30-why-rust-is-the-most-admired-language-among-developers&#x2F;&quot;&gt;continues to take the world by storm&lt;&#x2F;a&gt;.
+When considering what SSG I wanted to go with, it was important to me that I
+found one in a language that I, a: know, and b: enjoy working with.
+Rust checks both of these boxes for me, so I was pretty happy when I came across
+&lt;a href=&quot;https:&#x2F;&#x2F;getzola.org&quot;&gt;Zola&lt;&#x2F;a&gt;.
+Zola is written in Rust, which to me means that I can troubleshoot it more easily,
+and I could potentially contribute at some point down the line.&lt;&#x2F;p&gt;
+&lt;p&gt;I looked around a bit and also ended up finding the excellent theme &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;welpo&#x2F;tabi&quot;&gt;tabi&lt;&#x2F;a&gt;.
+It&#x27;s loaded with configuration to customize my blog exactly how I please,
+it&#x27;s secure by default, and the project&#x27;s &lt;a href=&quot;https:&#x2F;&#x2F;welpo.github.io&#x2F;tabi&#x2F;&quot;&gt;own GH pages&lt;&#x2F;a&gt;
+uses tabi (of course), and serves as project documentation - &lt;em&gt;neat&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Zola also has excellent documentation for getting set up on GH Pages, and there&#x27;s
+a &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;shalzz&#x2F;zola-deploy-action&quot;&gt;custom GH Action&lt;&#x2F;a&gt; for deploying.&lt;&#x2F;p&gt;
+&lt;p&gt;Overall, I&#x27;m quite happy with how this turned out.
+So maybe this time around I&#x27;ll actually take the time to write about some of
+the things I&#x27;m working on in my personal time 😅.&lt;&#x2F;p&gt;
+&lt;p&gt;All-in-all, it&#x27;s been a good weekend doing some spring cleaning, and now my blog
+is powered by Rust, and that&#x27;s always a plus.&lt;&#x2F;p&gt;
+</description>
+      </item>
+    </channel>
+</rss>
