@@ -1,6 +1,5 @@
 +++
 paginate_by = 5
-path = "/tags"
 title = "All Tags"
 template = "index.html"
 insert_anchor_links = "left"

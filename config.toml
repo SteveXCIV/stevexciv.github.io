@@ -11,14 +11,12 @@ default_language = "en"
 build_search_index = true
 
 # Atom/RSS
-generate_feed = true
-feed_filename = "rss.xml"
+generate_feeds = true
+feed_filenames = ["atom.xml", "rss.xml"]
 author = "Steve Troetti"
 
 # set theme
 theme = "tabi"
-
-browser_theme_color = "#ec984f"
 
 # homepage title
 title = "Steve Troetti's Blog"
@@ -31,9 +29,6 @@ taxonomies = [{ name = "tags", feed = true }]
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
 highlight_theme = "css"
-
-[link_cheker]
-internal_level = "error"
 
 [extra]
 # Put all your custom variables here
@@ -59,6 +54,7 @@ katex = true
 socials = [
   { name = "github", url = "https://github.com/SteveXCIV/", icon = "github" },
   { name = "linkedin", url = "https://www.linkedin.com/in/steve-troetti", icon = "linkedin" },
+  { name = "bluesky", url = "https://bsky.app/profile/stevexciv.com", icon = "bluesky" },
   { name = "mastodon", url = "https://mastodon.social/@stevexciv", icon = "mastodon" },
 ]
 # RSS feed
