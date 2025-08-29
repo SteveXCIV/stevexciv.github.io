@@ -182,8 +182,30 @@ func TestStatusJSONRoundTrip(t *testing.T) {
 - Looking at project plan doc, I need to support:
   - Add (aka Create op)
   - List (aka Read op)
+  - Search (another kind of Read op)
   - Complete (aka Update op)
   - Delete
-  - Search (another kind of Read op)
+
+Since this was business logic, I decided to switch it up a bit and go TDD.
+
+I also discovered that Golang doesn't support optional params.
+This was something I was used to from Rust, and to an extent Java (but Java makes it a bit easier to fake it with overloads).
+
+This helpful SO answer suggested using a param `struct`: https://stackoverflow.com/a/13603885
+
+I liked this a lot because it mirrors some of the design patterns I'm used to in Rust.
+
+I stubbed out a basic `Manager` struct and a rough outline of what I thought I'd need for the public API in commit: `df9e5831d74fb7e8c210b6bd76abf59630bd5699`
+
+**Interesting thing I noted:** there aren't a lot of helper functions like `IsEmpty` for thing like strings or slices, instead you just compare the `len` to zero or compare to the zero value. I can appreciate that this means there's usually only one right way to do something in Go.
+
+**Issue I ran into:** since enums are zero valued integers by default, expressing filters on them is a bit tricky since the default filter struct (in my case `ListTasksRequest`) would filter on the enum zero values. I did some research (Ask mode) plus this article: https://medium.com/@persona.piotr/golang-optional-type-d52f5498e300 - I ended up deciding to use pointers which default to `nil`. I made all fields except `OverdueOnly` pointers, partially to provide the `nil` defualt, partially to avoid copying (in the case of the `Category string`), and left the `OverdueOnly bool` as a regular value because it's very cheap to copy.
+
+**Another issue related to this:** taking pointers to constants directly is not allowed.
+This kind of sucks. The compiler could probably easily sub this out for a random/unused variable name, but tons of projects actually do this:
+
+- Kubernetes: https://github.com/kubernetes/utils/tree/master/ptr
+- Docker
+- AWS: https://github.com/aws/aws-sdk-go-v2/blob/main/aws/to_ptr.go
 
 ---
