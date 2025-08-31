@@ -19,7 +19,7 @@ tags = ["golang"]
 - used go by example for concrete examples: https://gobyexample.com/
 -
 
-## Creating the task structure
+## Creating the task structure and manager struct
 
 - `iota` is convenient but I did find a lot of its "magic" somewhat intimidating for a beginner
 - JSON only includes fields that are **public** so they need to be `TitleCase`
@@ -179,6 +179,8 @@ func TestStatusJSONRoundTrip(t *testing.T) {
 
 **Next up, creating the manager struct.**
 
+**NOTE:** I deviated pretty far from the structure of the plan here while still sticking to the requirements. I opted to fully test the manager API in one shot rather than implementing it piecemeal. Even though I didn't follow the plan precisely, I still feel like this experience gave me a pretty good handle on developing a simple project in Go.
+
 - Looking at project plan doc, I need to support:
   - Add (aka Create op)
   - List (aka Read op)
@@ -207,5 +209,56 @@ This kind of sucks. The compiler could probably easily sub this out for a random
 - Kubernetes: https://github.com/kubernetes/utils/tree/master/ptr
 - Docker
 - AWS: https://github.com/aws/aws-sdk-go-v2/blob/main/aws/to_ptr.go
+
+**More Go quirks:** there's this thing called "re-slicing" in Go that is/was an idiomatic approach for removing elements from a slice.
+This seemed (a) weird because it's just verbose enough to need to read it carefully every time you encounter it, and (b) controversial: https://stackoverflow.com/q/46917331
+Luckily, Go now supports a `slices.Delete` function: https://go.dev/play/p/J--7kzTNvjE
+
+## Creating the CLI interface
+
+After some thought, I decided on roughly this design for my first attempt at making the CLI interface:
+
+- a `Command` interface with a common `Execute(m *tasks.Manager)` function
+- a `Parse` function that parses `Command`s from a slice of args
+- a `cli` package to store it all
+
+At this point, I needed to do some reading on how CLI flags, args, and parsing in general works.
+Luckily, Go by Example had my back: https://gobyexample.com/command-line-arguments
+
+I quickly discovered, however, that the built in `flag` package doesn't allow you to pass in your own string for supplying the arguments.
+This is kind of a hindrance for testability purposes, but definitely not an impossible problem to solve.
+In fact, Go by Example has a recipe for this exact case: https://gobyexample.com/command-line-subcommands
+
+In my exploration I did also find this third party library called Cobra: https://pkg.go.dev/github.com/spf13/cobra#section-readme
+It looks like something I definitely want to explore in the future, but for right now, I decided to stick with just the standard library.
+
+**Another thing I found that I wasn't thrilled about:** deep equality.
+
+Go doesn't have any built-in way to customize `==` and `!=`.
+This seems to be fairly commonly discussed:
+
+- https://stackoverflow.com/q/15311969
+- https://old.reddit.com/r/golang/comments/1ff40jy/recommended_way_to_implement_custom_struct/
+
+Since I'm just trying to get my unit tests working, I went ahead and used the built-in reflection technique:
+
+```go
+			if !reflect.DeepEqual(&tt.addCmd, addCmd) {
+				t.Fatalf("unexpected command: wanted=%v, got=%v", tt.addCmd, addCmd)
+			}
+```
+
+### Tangent 1: Rethinking the design
+
+As I was working through the CLI code, I thought about my current design.
+I originally had liked the idea of a request/response style API for the task `Manager`, but I started to see it as over-engineered when looking at the CLI `Command`/`Execute` pattern.
+I decided to rework the `Manager` to get rid of this extra layer of indirection.
+
+Starting with the `Add` command (just because that's what I had implemented parsing for first), I got rid of `AddTaskRequest` and instead just made the manager accept arguments directly in `AddTask`.
+
+Another thing I changed was accepting a `func` for computing `DueDate` from `now time.Time`, so the caller doesn't need to know the absolute time upfront.
+This makes relative task scheduling much simpler.
+
+While I was at it, I also just made the internal constructor function for `Manager` a package-level (i.e. not exported) function, since we only use it for testing.
 
 ---
