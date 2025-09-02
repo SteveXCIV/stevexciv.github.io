@@ -261,4 +261,19 @@ This makes relative task scheduling much simpler.
 
 While I was at it, I also just made the internal constructor function for `Manager` a package-level (i.e. not exported) function, since we only use it for testing.
 
+Also, I went ahead and got rid of **all** `*Request` structs, now the `Command` implementations would just operate on the `Manager` directly.
+
+Finally, to make testing the `Command` implementations easier, I went ahead and made `Manager` an interface.
+
+### Tangent 2: Mock manager
+
+I also went ahead and made a quick little `mockManager` struct to implement the `Manager` interface.
+Unfortunately this ended up in a bit of a less-than ergonomic pattern for accessing the manager because I had to make a pointer to a pointer.
+This happened because the `Execute` function of `Command` takes a `*Manager` as a parameter, and `Manager` is only implemented for `*mockManager`.
+I decided to just make a TODO comment for this and revisit it later, since it really only impacts tests.
+
+And as soon as I started implementing the tests, I realized that the double pointer approach was going to cause me to fight the type system, so I got rid of it.
+
+**And finally, with a simple wiring up of commands in main, I had all core functionality done in:** `e01b49a8e15886b41013e0de7dd077e3c5f5f0b2`.
+
 ---
