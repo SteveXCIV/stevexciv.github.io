@@ -276,4 +276,8 @@ And as soon as I started implementing the tests, I realized that the double poin
 
 **And finally, with a simple wiring up of commands in main, I had all core functionality done in:** `e01b49a8e15886b41013e0de7dd077e3c5f5f0b2`.
 
+My very last step was to create a rendering helper function to print out `Task` tables, I used the built-in `text/tabwriter` for this.
+I wasn't completely satisfied with the fact that there didn't seem to be an easy way to make a horizontal rule without looping over all the tasks, but I'll live.
+Finally, with that last change, the TODO CLI was done.
+
 ---
