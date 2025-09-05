@@ -1,8 +1,8 @@
 +++
 title = "Giving Go a Try"
 author = "Steve Troetti"
-date = 2025-09-03
-updated = 2025-09-03
+date = 2025-09-04
+updated = 2025-09-04
 description = "A constructive, honest review of my first real Go project: a CLI todo app."
 [taxonomies]
 tags = ["go", "golang", "learning", "cli"]
@@ -22,13 +22,14 @@ While I don't think Java will ever go away, and I still love Rust, I was itching
 For a moment, let's rewind back to late 2019, I was working with a small group on a project that I was pretty excited about.
 It was a Python app that, at the time, we felt had a lot of potential.
 Unfortunately, however, that project ended up fizzling out, but I still remember one thing from back then.
-The software we had been building correlated near real-time data from multiple feeds, and we were quickly outgrowing Python.
+The software we had been building processed near real-time data from multiple feeds, and we were quickly outgrowing Python.
 We'd been talking for some time about a Go port, because one of our contributors was familiar with Go.
 
 I never got a chance to explore Go back then, and I don't really like leaving things unfinished.
+
 Now that I was looking for something new, I decided to just <em title="(sorry)">Go</em> for it.
 
-## What to Build
+## Deciding What to Build
 
 I remember I had a professor back in undergrad that loved to use the "Lazy developers are good developers" line.
 That professor would be proud because I got a bit lazy when picking a project.
@@ -60,7 +61,7 @@ After a brisk pass through the tour, and a couple of cherry-picked examples, I d
 
 # Implementation Experience
 
-**NOTE:** I've kept the [plan docuement](https://github.com/SteveXCIV/golang-todo-cli/PROJECT_PLAN.md) that I AI-generated in the repository as a _reference_.
+**NOTE:** I've kept the [plan docuement](https://github.com/SteveXCIV/golang-todo-cli/blob/main/PROJECT_PLAN.md) that I AI-generated in the repository as a _reference_.
 I've deviated from it in my actual implementation, but it still served as a decent scaffold.
 
 ## Creating the Task struct
@@ -119,7 +120,11 @@ const (
 )
 ```
 
-This is convenient, but I could easily see it as a pain point for working with large enums.
+This is convenient, but it's also a lot of functionality packed into one feature.
+
+##### Iota - Conclusion
+
+I think that `iota` is definitely an interesting convenience feature, but I'm not sure yet how I feel about how clever it allows developers to get.
 
 ### Field Naming
 
@@ -140,126 +145,233 @@ These are string literals that can appear next to `struct` fields.
 Other modules can access these values via reflection.
 The `json` module has [a DSL](https://pkg.go.dev/encoding/json#Marshal) for controlling the conversion to JSON.
 
-### Customizing Output Formats
-
----
-
-## 3. Implementation Experience
-
-Overview
-
-- Short narrative of how implementation proceeded (from single file → packages → tests → CLI).
-
-  3.1 Data modeling & JSON
-
-- Design of Task struct and exported fields for JSON.
-- Problems encountered: verbose time format, custom marshal/unmarshal, pointer vs non-pointer receiver behavior.
-- How DueDate and Priority/Status types were implemented and why.
-
-Include a minimal code example (replace with your final excerpt):
+Speaking of JSON marshalling, I really like how the Go standard library makes it easy to define custom output formats for types.
+Since enums are actually just integers, by default they get written as integer literals in the JSON output.
+Two easy function implementations can change that:
 
 ```go
-type Task struct {
-    ID       int       `json:"id"`
-    Title    string    `json:"title"`
-    Priority Priority  `json:"priority"`
-    DueDate  DueDate   `json:"dueDate"`
-    Category string    `json:"category"`
+var priorityToString = map[Priority]string{
+	Low:    "LOW",
+	Medium: "MEDIUM",
+	High:   "HIGH",
+}
+
+var stringToPriority = map[string]Priority{
+	"LOW":    Low,
+	"MEDIUM": Medium,
+	"HIGH":   High,
+}
+
+func (p Priority) MarshalJSON() ([]byte, error) {
+	if str, ok := priorityToString[p]; ok {
+		return json.Marshal(str)  // the JSON marshaller writes a string instead of an integer
+	}
+	return nil, fmt.Errorf("unknown priority: %d", p)
+}
+
+func (p *Priority) UnmarshalJSON(b []byte) error {
+	var k string  // we parse the string
+	// fail if the string isn't in the stringToPriority mapping
+	if err := json.Unmarshal(b, &k); err != nil {
+		return fmt.Errorf("priority should be a string, got %s", string(b))
+	}
+	if val, ok := stringToPriority[k]; ok {
+		*p = val   // otherwise, set the Priority pointer to that value
+		return nil
+	}
+	return fmt.Errorf("unknown priority: %s", k)
 }
 ```
 
-3.2 Testing
+### The Final Task Struct
 
-- Why I chose TDD for manager logic.
-- Table-driven tests were a win — examples and what they validated.
-- Test runner awkwardness (module path vs ./...); commands used.
+After all was said and done, I had a `Task` struct that:
 
-Example test command:
+- has all fields listed above
+- uses `camelCase` naming for JSON marshalling
+- uses custom marshal/unmarshal `string` representation for all enums
 
-- go test ./...
+It didn't take me very long, and the code was pretty straightforward and fun to write.
+I also went ahead and added some tests, because I had been abusing my poor `main()` function to manually test.
 
-  3.3 Project structure & packages
+## Creating the Task Manager
 
-- Single-file start → tasks package split.
-- Module path case-sensitivity and lessons learned.
-- Final layout (show small tree snippet).
+The plan also mentioned creating a task manager class for providing the CRUD operations.
+Based on the generated examples, I came up with a design for the API.
 
-  3.4 Manager API & optional parameters
+I originally started off with a `Manager` struct, but I switched to an interface for a couple of reasons.
+My primary reason is that I like test driven development (TDD).
+Interfaces also make it quick and easy to make mock dependencies for testing very specfic scenarios.
+Here's what I ultimately ended up with:
 
-- Challenge: no optional params in Go.
-- Solution: param structs and pointer fields to signal "unset".
-- Trade-offs (pointer ergonomics, taking pointers to constants).
+```go
+type Manager interface {
+	AddTask(title string, priority Priority, getDueDate func(time.Time) DueDate, category string) (*Task, error)
+	ListTasks(status *Status, priority *Priority, category string, overdueOnly bool) ([]Task, error)
+	SearchTasks(query string) ([]Task, error)
+	CompleteTask(id int) error
+	DeleteTask(id int) error
+}
+```
 
-  3.5 CLI design & wiring
+The implementation is fairly simple and just uses a slice of `Task` and linearly iterates them for list/search.
+I could have done something more sophisticated like using maps to store indices, but I kept it simple.
+My goal was just to learn Go, not to make the ideal TODO CLI.
 
-- Command interface and Execute pattern.
-- Parsing approach (stdlib flag vs future Cobra).
-- Testing commands and deep-equality issues (reflect.DeepEqual use).
+There are a couple of things I do think are noteworthy about this design.
 
-  3.6 Small pain points and pleasant surprises
+### The `getDueDate` Function Pointer
 
-- Pain: time formatting, module path quirks, no custom == for structs, pointer-to-const inconvenience.
-- Pleasant: fast compile, built-in testing, idiomatic table-driven tests, simple stdlib for many tasks.
+The design doc examples showed being able to specify strings like "today" and "tomorrow" for the due date.
+I decided to capture these cases elsewhere in the code, so instead of having an API to specify "special" dates, the `Manager` just takes a function and passes its own `now`.
+This also makes testing pretty comfy.
 
----
+### Pointers for Status and Priority
 
-## 4. Conclusion
+The `ListTasks` API is kind of interesting because it accepts status/priority for "is equal to"-style filtering.
+There isn't a built-in `Option` type in Go, so I used pointers because their "zero" value is `nil`.
+This works really nicely with how `struct`s use the zero value for unspecified fields.
+It means it I were to, for example, parse a "command" struct from the program arguments, I could leave the unspecified filtering arguments as `nil` very easily.
 
-What I built
+Speaking of, let's talk about the `Command` interface.
 
-- Brief recap of the finished CLI todo app and core features.
+## Creating the Commands
 
-Overall assessment
+For my CLI commands, I created a very simple interface, it has a single `Execute` method which takes a `Manager` and returns `(string, error)`.
+Here's what that looks like in code:
 
-- Honest pros/cons of Go from this experience.
-  - Pros: simplicity, tooling, tests, performance.
-  - Cons: quirks around time/layout, ergonomics for optional values, case-sensitive module paths.
+```go
+type Command interface {
+	Execute(m tasks.Manager) (string, error)
+}
+```
 
-Would I use Go again?
+Then, in the same `cli.go` file, I stubbed out a top level `Parse` function, with this signature:
 
-- Scenarios where Go makes sense (small CLIs, services, simple concurrent programs).
-- Where I'd prefer other languages (complex data modeling where richer type ergonomics help).
+```go
+func Parse(a *[]string) (Command, error) { ... }
+```
 
----
+I also stubbed out individual unexported helpers for parsing the individual commands.
+Commands more or less just delegate to `Manager`, but I do want to circle back one last time to `AddCommand`.
+The `struct` looks like this:
 
-## 5. Key takeaways (TL;DR)
+```go
+type AddCommand struct {
+	Title    string
+	Priority tasks.Priority
+	Due      IntoDueDate
+	Category string
+}
+```
 
-- 3–6 bullets summarizing practical lessons and recommendations for new Go learners.
+The `IntoDueDate` type is a second interface I made:
 
----
+```go
+type IntoDueDate interface {
+	IntoDueDate(time.Time) tasks.DueDate
+}
+```
 
-## 6. Next steps / Future work
+This is how I manage computing the timestamp for the `Manager.Add` API!
+Here's an example with `DueTomorrow`:
 
-- Try Cobra for CLI.
-- Add concurrency or file-locking for persistence.
-- Explore Go modules and versioning in larger projects.
-- Port to a small web UI or REST API.
+```go
+type DueTomorrow struct{}
 
----
+func (d *DueTomorrow) IntoDueDate(t time.Time) tasks.DueDate {
+	return tasks.DueDate(t.Add(time.Hour * 24))
+}
+```
 
-## 7. Appendix
+Once I had all of the commands implemented, wiring everything up was easy!
 
-A. Useful links & references
+## Wiring it Up
 
-- Tour of Go — https://go.dev/tour
-- Go by Example — https://gobyexample.com
-- time.Layout docs — https://pkg.go.dev/time#Layout
-- encoding/json Marshaler — https://pkg.go.dev/encoding/json#Marshaler
+One thing I **really** like about how this program turned out is just how simple everything is once it's all put together.
+The entire `main` method is very digestable and doesn't even require scrolling the page on my monitor:
 
-B. Notable commits
+```go
+func main() {
+	args := os.Args[1:]
+	cmd, err := cli.Parse(&args)
+	if err != nil {
+		fmt.Println("Error parsing command: ", err)
+		os.Exit(1)
+	}
 
-- List the commit hashes and short notes (pull from your draft).
+	m, err := tasks.NewManager()
+	if err != nil {
+		fmt.Println("Error creating task manager: ", err)
+		os.Exit(1)
+	}
 
-C. Commands
+	res, err := cmd.Execute(m)
+	if err != nil {
+		fmt.Println("Error executing command: ", err)
+		os.Exit(1)
+	}
 
-- go test ./...
-- go run ./main.go add ...
-- any build/test helper commands you used (just, Makefile, etc.)
+	fmt.Println(res)
+}
+```
 
----
+Just like that, my first Go program was written!
 
-Notes for polishing
+# Conclusion
 
-- Add 2–3 small, well-commented code excerpts to illustrate core ideas (Task struct, Marshal/Unmarshal, a representative test).
-- Keep tone constructive and honest — readers value practical trade-offs.
-- Link to the repository and include a short "How to run" section if you publish the
+My overall impression of Go is that it's a language written for getting things done quickly.
+The language feature set is small.
+Default behaviors are something you should be aware of and rely on.
+The standard library is robust enough to get you writing code ASAP.
+
+What Go lacks in feature surface, it makes up for in having mostly sensible defaults.
+That being said, there were some things I found odd or surprising.
+Here's a couple of highlights of things I liked and things I didn't.
+
+## What I Liked
+
+**Most defaults are sensible:** do you have an `int`? Your zero value is `0`.
+A `string` is empty by default, so there's no need for a dedicated empty-checking function, just compare equality with `""`.
+Pointers are `nil` by default, so just be careful before trying to derefernce them.
+Most things behave the way you'd expect them to by default.
+
+**Table driven testing:** I said earlier that I love TDD.
+Table-driven tests are, in my opinion, tragically underutilized.
+The fact that Go makes them so easy to write is a dream.
+
+**Extremely strong standard library:** I mentioned earlier that the Go standard libary is **really** nice.
+I never needed to leave the standard library while building this app.
+While the app isn't perfect, it _is_ completely usable and didn't take long to build.
+I didn't mention earlier, but there's even a `text/tabwriter` utility ([link](https://pkg.go.dev/text/tabwriter)) for printing out tables.
+I used `text/tabwriter` for printing the `list` and `search` command results.
+Other honorable mentions not used in this project include `slog` for structured logging and a fully-featured template engine.
+That's just plain awesome.
+
+## What I Disliked
+
+**Date formatting:** Go uses an example-based system for date format strings.
+Instead of `yyyy-MM-dd`, you say `2006-01-02`, and _therein lies the problem_.
+[Go by Example](https://gobyexample.com/time-formatting-parsing) has some great, well, examples where you can see this in action.
+I stared at this reference time for a **long**, well, time.
+I eventually found out that this [SO answer](https://stackoverflow.com/a/28087574) - as it turns out, the Go reference time is `1 2 3 4 5 6 7` in the form `month day hour minute second year zone-offset`.
+I really do not like this.
+It feels like an Easter egg hidden in the standard library.
+I don't mind the example-based format, but 1970-01-01 was already a perfectly decent epoch.
+
+**No Built-in Equals:** Go does not allow types to redefine the behavior of `==`.
+You have to write your own `Equals` method.
+I found this a bit frustrating when writing tests, but luckily there's `reflect.DeepEqual`, which uses reflection, so it shouldn't be used in Production code.
+I do still find it a bit strange though, given how ergonomic it is to opt-into things like custom JSON marshalling.
+This isn't something I'm losing any sleep over, though.
+
+# Final Thoughts
+
+The obvious question is whether or not I'd use Go again.
+In short, yes, I would.
+
+Depsite the small number of things I disliked, there was a lot to like.
+Go is small and fast, and that simplicity feels really nice.
+In the past I had a habit of prototyping an idea in Python and then actually implementing it for real in Rust or Java.
+
+With Go, I feel like I can skip the Python step.
