@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8"><meta http-equiv="Content-Security-Policy"
+content="default-src 'self';font-src &#x27;self&#x27; data:;img-src &#x27;self&#x27; https:&#x2F;&#x2F;* data:;media-src &#x27;self&#x27;;style-src &#x27;self&#x27;;frame-src player.vimeo.com https:&#x2F;&#x2F;www.youtube-nocookie.com;connect-src 'self';script-src 'self' 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base" content="https://www.stevexciv.com">
+
+    
+    <title>
+Creative Coding: Generating Banner Images • Steve Troetti's Blog</title>
+
+    
+    
+        <link rel="icon" type="image/png" href="https://www.stevexciv.com/images/favicon.ico"/>
+    
+    
+
+    
+    
+        
+            
+            
+                
+                    <link rel="alternate" type="application/atom+xml" title="Steve Troetti's Blog - Atom Feed" href="https://www.stevexciv.com/atom.xml">
+                
+            
+                
+                    <link rel="alternate" type="application/rss+xml" title="Steve Troetti's Blog - RSS Feed" href="https://www.stevexciv.com/rss.xml">
+                
+            
+        
+    
+
+    
+    
+    
+        
+            <link rel="stylesheet" href="https://www.stevexciv.com/custom_subset.css?h=0b9535a28bc3d5bf2321">
+        
+    
+
+    
+        <link rel="stylesheet" href="https://www.stevexciv.com/main.css?h=8fdd91b344907eec17e2" />
+        <link rel="stylesheet" href="https://www.stevexciv.com/skins/lowcontrast_orange.css?h=43aaccb17d8ec616ace4" />
+
+    <meta name="color-scheme" content="dark" />
+        <meta name="description" content="First post about generating profile banner images in Rust with Nannou." />
+        <meta property="og:description" content="First post about generating profile banner images in Rust with Nannou." />
+
+    
+
+    <meta property="og:title" content="Creative Coding: Generating Banner Images" />
+    <meta property="og:type" content="article" />
+
+    
+<meta property="og:locale" content="en_GB" />
+
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.stevexciv.com&#x2F;blog&#x2F;creative-coding-generating-banner-images&#x2F;" /><meta property="og:site_name" content="Steve Troetti&#x27;s Blog"><script defer src="https://www.stevexciv.com/search_index.en.js?h=23565f36ca1bebd67f9b"></script>
+        <script defer src="https://www.stevexciv.com/js/searchElasticlunr.min.js?h=3626c0ef99daa745b31e"></script>
+
+        </head>
+
+
+<body>
+    <header>
+    <nav class="navbar">
+        <div class="nav-title">
+            <a class="home-title" href="https://www.stevexciv.com">Steve Troetti&#x27;s Blog</a>
+        </div>
+            <div class="nav-navs">
+                <ul>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding" href="https://www.stevexciv.com/blog/">blog
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding" href="https://www.stevexciv.com/tags/">tags
+                                </a>
+                            </li>
+                        <li class="menu-icons-container">
+                        <ul class="menu-icons-group">
+                            <li class="js menu-icon">
+                                <div role="button" tabindex="0" id="search-button" class="search-icon interactive-icon" title="Click or press $SHORTCUT to open search" aria-label="Click or press $SHORTCUT to open search">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                                    </svg>
+                                </div>
+                            </li>
+
+                            
+                            
+
+                            </ul>
+                    </li>
+                </ul>
+            </div>
+        
+    </nav>
+</header>
+
+    <div class="content">
+
+        
+        
+
+
+
+
+<main>
+    <article>
+        <h1 class="article-title">
+            Creative Coding: Generating Banner Images
+        </h1>
+
+        <ul class="meta">
+                <li>20th Feb 2024</li><li title="2453 words"><span class='separator' aria-hidden='true'>•</span>13 min read</li><li class="tag"><span class='separator' aria-hidden='true'>•</span>Tags:&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/rust/">rust</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/nannou/">nannou</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/creative-coding/">creative-coding</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/banner-gen/">banner-gen</a></li></ul><ul class="meta last-updated"><li>Updated on 20th Feb 2024</li>
+        </ul>
+
+        <section class="body"><h1 id="creative-coding-generating-banner-images"><a class="header-anchor no-hover-padding" href="#creative-coding-generating-banner-images" aria-label="Anchor link for: creative-coding-generating-banner-images"><span class="link-icon" aria-hidden="true"></span></a>
+Creative Coding: Generating Banner Images</h1>
+<p>Shortly after <a href="https://www.stevexciv.com/blog/back-to-blogging/">revitalizing</a> this blog, I also
+decided to join Mastodon as a way to provide updates on my blogging journey.
+As I was working on getting a verified badge for my site URL, I noticed the
+conspicuous absence of a banner image on my profile.
+I had my profile picture ready-to-go, but I've never needed a banner image before.
+What did I decide to do? Well, write some code of course!</p>
+<p>Below, I'll talk through library/framework selection, my general thought process,
+and describe how I arrived at the (very) rough implementation I did.
+If you just want to see the code, that's <a href="https://github.com/SteveXCIV/banner-gen">here</a>.</p>
+<h2 id="picking-a-theme"><a class="header-anchor no-hover-padding" href="#picking-a-theme" aria-label="Anchor link for: picking-a-theme"><span class="link-icon" aria-hidden="true"></span></a>
+Picking a Theme</h2>
+<p>Ok, so I decided to generate some banner art.
+The question then is: <em>what</em> do I want to generate?
+I decided for now to keep it nice and simple, and reach for the tried and true
+Midpoint Displacement algorithm - in two dimensions, you might see this called
+the "Diamond-Square algorithm" (<a href="https://en.wikipedia.org/wiki/Diamond-square_algorithm">wiki</a>).</p>
+<p>Midpoint Displacement is a fairly low-effort way to get some decent looking
+mountains.
+Since it's a fractal algorithm, it works well for generating visuals without an
+obvious cyclic pattern.
+This tends to make better looking mountain silhouettes, than say, a composition
+of sinunsoids, which would appear much more regular.</p>
+<p>A developer by the name of Paul Martz wrote up an excellent description of the
+algorithm in an article called "Generating Random Fractal Terrain".
+Unfortunately, the website hosting this article seems to have gone offline
+some time ago.
+Luckily, <a href="https://web.archive.org/web/20160322002558/http://www.gameprogrammer.com/fractal.html">archive.org</a> has plenty of captures.
+I probably <strong>would not</strong> trust any code downloads linked there to be valid, but
+the textual descriptions are still quite good.</p>
+<p>Restating, I think, is one of the best ways to understand a concept, so I'll
+outline the algorithm in TL;DR fashion here:</p>
+<ul>
+<li>Start with a pair of points; at the min and max X-coordinate of your image, respecively</li>
+<li>Repeat some <code>N</code> number of times:
+<ul>
+<li>For each pair of points:
+<ul>
+<li>Add a new point between the two, and displace this point on the Y-axis by some displacement amount</li>
+<li>Reduce the magnitude of the displacement amount using some smoothing factor</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="midpoint-displacement-in-rust"><a class="header-anchor no-hover-padding" href="#midpoint-displacement-in-rust" aria-label="Anchor link for: midpoint-displacement-in-rust"><span class="link-icon" aria-hidden="true"></span></a>
+Midpoint Displacement in Rust</h2>
+<p>Once I settled on what I wanted to generate, it was time to get some hands-on-keyboard
+time.
+One thing I really like to think about whenever I'm doing a project, in any language,
+is what the language and its ecosystem offers.
+When I first began this project, I went through a similar process with Rust.
+At the onset, I thought it might be neat to use pattern matching to recursively
+generate splits of line segments into smaller segments.</p>
+<h3 id="initial-brainstorm"><a class="header-anchor no-hover-padding" href="#initial-brainstorm" aria-label="Anchor link for: initial-brainstorm"><span class="link-icon" aria-hidden="true"></span></a>
+Initial Brainstorm</h3>
+<p>I brainstormed something like this:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-enum z-rust"><span class="z-storage z-modifier z-rust">pub</span> <span class="z-storage z-type z-enum z-rust">enum</span> <span class="z-entity z-name z-enum z-rust">Path</span> <span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-enum z-rust"><span class="z-meta z-block z-rust">    Segment<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-storage z-type z-rust">f32</span><span class="z-punctuation z-separator z-rust">,</span> <span class="z-storage z-type z-rust">f32</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-enum z-rust"><span class="z-meta z-block z-rust">    Node<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>Path<span class="z-punctuation z-separator z-rust">,</span> Path</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-enum z-rust"><span class="z-meta z-block z-rust"></span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<p>Now, if you're an experienced Rustacean, you'll probably see a problem with this
+approach.
+If you're new to Rust, the issue might be lost on you because it's quite subtle.
+One of the things that Rust programmers need to be cognizant of is the <em>size</em> of
+data types.
+The compiler needs to be able to determine, at compile time, how much memory
+every instance of a given data type needs to allocate.
+Let's take a closer look at our implementation and try to figure that out.</p>
+<p>So, for the case of a <code>Segment</code>, determining the data size is quite simple,
+since it's two 32-bit floats, and those have a fixed size.</p>
+<p>Now then, what about the memory required for a <code>Node</code>?
+We could look at the simplest possible <code>Node</code>, which would look something like:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-path z-rust">Path<span class="z-punctuation z-accessor z-rust">::</span></span>Node<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-meta z-path z-rust">Path<span class="z-punctuation z-accessor z-rust">::</span></span>Segment<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-constant z-numeric z-float z-rust">0.</span><span class="z-constant z-numeric z-float z-rust">0</span><span class="z-punctuation z-separator z-rust">,</span> <span class="z-constant z-numeric z-float z-rust">0.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-separator z-rust">,</span> <span class="z-meta z-path z-rust">Path<span class="z-punctuation z-accessor z-rust">::</span></span>Segment<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-constant z-numeric z-float z-rust">0.</span><span class="z-constant z-numeric z-float z-rust">0</span><span class="z-punctuation z-separator z-rust">,</span> <span class="z-constant z-numeric z-float z-rust">0.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span></code></pre>
+<p>Well, then we have a problem.
+Since we could technically create a <code>Path</code> with of infinitely nested <code>Node</code>s,
+it's simply <em>not possible</em> to determine the size in this case.
+The upper bound of our data type's size is infinite, and the compiler cannot
+write an instruction to allocate infinite memory.
+In fact, if we try to compile, the compiler helpfully informs us that this is
+the case:</p>
+<pre class="z-code"><code><span class="z-text z-plain">error[E0072]: recursive type `Path` has infinite size
+</span><span class="z-text z-plain"> --&gt; src/lib.rs:1:1
+</span><span class="z-text z-plain">  |
+</span><span class="z-text z-plain">1 | pub enum Path {
+</span><span class="z-text z-plain">  | ^^^^^^^^^^^^^
+</span><span class="z-text z-plain">2 |     Segment(f32, f32),
+</span><span class="z-text z-plain">3 |     Node(Path, Path),
+</span><span class="z-text z-plain">  |          ---- recursive without indirection
+</span><span class="z-text z-plain">  |
+</span><span class="z-text z-plain">help: insert some indirection (e.g., a `Box`, `Rc`, or `&amp;`) to break the cycle
+</span><span class="z-text z-plain">  |
+</span><span class="z-text z-plain">3 |     Node(Box&lt;Path&gt;, Path),
+</span><span class="z-text z-plain">  |          ++++    +
+</span><span class="z-text z-plain">
+</span><span class="z-text z-plain">For more information about this error, try `rustc --explain E0072`.
+</span></code></pre>
+<p>The compiler also helpfully proposes a fix for us, using some <em>indirection</em>.
+What this means, in other words, is to structure the data type in such a way
+that a <code>Node</code> takes up a fixed size, by heap-allocating the inner <code>Path</code>s.
+This turns them into pointers, which have a fixed size.</p>
+<p>Ultimately, I decided against doing this.
+My reasoning was that I didn't think this design was actually going to provide
+me as much value as I initially thought.
+I might revisit this at a later point, but it was a fun diversion.</p>
+<h3 id="the-actual-approach"><a class="header-anchor no-hover-padding" href="#the-actual-approach" aria-label="Anchor link for: the-actual-approach"><span class="link-icon" aria-hidden="true"></span></a>
+The Actual Approach</h3>
+<p>I ended up going with something a little more "traditional", for lack of a
+better term.
+This approach looks and feels a lot like what you might see in C++, Java, or
+other well-known languages.
+It's also not all that heavy on Rust language features, and has some
+panicking code sprinkled in, but that's all a future refactor waiting to happen.</p>
+<p>For starters, I sketched out what I'd need to implement this algorithm.
+I landed on:</p>
+<ul>
+<li>a number of <code>steps</code> (this is <code>N</code> in the pseudocode above)</li>
+<li>an <code>initial_displacement</code>, or how much noise there should be on the first recursive step</li>
+<li>a <code>smoothness</code> value, or how much to reduce displacement per recursive level</li>
+</ul>
+<p>That landed me on this function signature:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">compute_points</span></span><span class="z-meta z-generic z-rust"><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>R<span class="z-punctuation z-separator z-rust">:</span> Rng<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">rng</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> R,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">steps</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">u32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">initial_displacement</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">smoothness</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust"> <span class="z-meta z-function z-return-type z-rust"><span class="z-punctuation z-separator z-rust">-&gt;</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-storage z-type z-rust">f32</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span>
+</span></span></span></code></pre>
+<p>Let's unpack this.
+We see here that our function takes the three parameters mentioned above, as well
+as some <code>rng</code> (more on that shortly), and it returns a vector of <code>f32</code>.
+As for implementation, we roughly want to do something like:</p>
+<ul>
+<li>start with an empty vector with enough capacity for <code>steps</code> number of subdivisions</li>
+<li>populate the initial endpoints with a value (these will be the start and end of the vector)</li>
+<li>repeat <code>steps</code> number of times:
+<ul>
+<li>compute the midpoint for each pair of points</li>
+<li>displace the midpoint by a random amount, bounded by the current displacement</li>
+<li>reduce the displacement amount using <code>smoothness</code></li>
+</ul>
+</li>
+</ul>
+<p>Reading this over, we can see that we need some source of (pseudo-)randomness in
+order to generate displaced midpoints.
+That's where our parameter <code>rng</code> comes in, it's our source of (pseudo-)randomness.
+The function signature includes this <code>&lt;R: Rng&gt;</code> - that's called a <strong>trait bound</strong>
+in Rust.
+What we're telling the compiler is that this function is generic over some type
+<code>R</code>, and only types that implement the trait <code>Rng</code> are valid.
+What is <code>Rng</code>, you may ask? It's the core trait in the very popular
+<a href="https://crates.io/crates/rand"><code>rand</code></a>
+crate in the Rust ecosystem.</p>
+<p>Ok, now that we've squared that away, let's talk implementation details.
+Since I planned on implementing this as a recursive function, I went with the
+tried and true pattern of creating a "wrapper" function that computes all the
+initial state, and an additional function that does the recursive step.
+I sketched out this signature for the recursive step, which I called <code>fill</code>:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">fill</span></span><span class="z-meta z-generic z-rust"><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>R<span class="z-punctuation z-separator z-rust">:</span> Rng<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">rng</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> R,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">points</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Option</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-storage z-type z-rust">f32</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">i</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">usize</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">j</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">usize</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">steps</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">u32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">displacement</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">  <span class="z-variable z-parameter z-rust">smoothness</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust">
+</span></span></code></pre>
+<p>A couple of things to note here:</p>
+<p>This function takes in a mutably-referenced <code>Vec&lt;Option&lt;f32&gt;&gt;</code> instead of a <code>Vec&lt;f32&gt;</code>.
+I did this to leverage Rust's <code>Option</code> type to denote to-be-computed points,
+rather than using a sentinel value like <code>0.0</code>.
+This, in my opinion, is a better design because the compiler forces us to address
+both the <code>None</code> and <code>Some(...)</code> cases explicitly, rather than just assuming a value
+exists.
+Also, floating point equality has a bunch of gotchas associated with it, which I
+wanted to sidestep, and <code>0.0</code> is a perfectly valid value for a point, so there's
+no guarantee this algorithm couldn't accidentally overwrite previously computed
+points in the case of a bug.
+The function also takes two indices called <code>i</code> and <code>j</code> - these will control which
+subsection of the vector each recursive call operates on.</p>
+<p>Finally, I wrote a quick helper function to compute the index of a midpoint,
+given an <code>i</code> and <code>j</code> index.
+This is pretty straightforward so I'm just going to drop the implementation in here:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">midpoint</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span><span class="z-variable z-parameter z-rust">i</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">usize</span>, <span class="z-variable z-parameter z-rust">j</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">usize</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust"> <span class="z-meta z-function z-return-type z-rust"><span class="z-punctuation z-separator z-rust">-&gt;</span> <span class="z-storage z-type z-rust">usize</span></span> </span><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    i <span class="z-keyword z-operator z-arithmetic z-rust">+</span> <span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>j <span class="z-keyword z-operator z-arithmetic z-rust">-</span> i</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">/</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">2</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"></span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<p>Finally, following my textual descriptions above, I implemented the other two
+functions as follows:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">fill</span></span><span class="z-meta z-generic z-rust"><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>R<span class="z-punctuation z-separator z-rust">:</span> Rng<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">rng</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> R,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">points</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Option</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-storage z-type z-rust">f32</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">i</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">usize</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">j</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">usize</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">steps</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">u32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">displacement</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">smoothness</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust"> </span><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-keyword z-control z-rust">if</span> steps <span class="z-keyword z-operator z-comparison z-rust">==</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">0</span> <span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-block z-rust">        <span class="z-keyword z-control z-rust">return</span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-block z-rust">    </span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> mid <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-support z-function z-rust">midpoint</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>i<span class="z-punctuation z-separator z-rust">,</span> j</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-keyword z-control z-rust">if</span> mid <span class="z-keyword z-operator z-comparison z-rust">==</span> i <span class="z-keyword z-operator z-logical z-rust">||</span> mid <span class="z-keyword z-operator z-comparison z-rust">==</span> j <span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-block z-rust">        <span class="z-keyword z-control z-rust">return</span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-block z-rust">    </span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> i_val <span class="z-keyword z-operator z-assignment z-rust">=</span> points<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">[</span>i<span class="z-punctuation z-section z-group z-end z-rust">]</span></span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">expect</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-string z-quoted z-double z-rust"><span class="z-punctuation z-definition z-string z-begin z-rust">&quot;</span>no value at i index<span class="z-punctuation z-definition z-string z-end z-rust">&quot;</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> j_val <span class="z-keyword z-operator z-assignment z-rust">=</span> points<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">[</span>j<span class="z-punctuation z-section z-group z-end z-rust">]</span></span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">expect</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-string z-quoted z-double z-rust"><span class="z-punctuation z-definition z-string z-begin z-rust">&quot;</span>no value at j index<span class="z-punctuation z-definition z-string z-end z-rust">&quot;</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> mid_val <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>i_val <span class="z-keyword z-operator z-arithmetic z-rust">+</span> j_val</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">/</span> <span class="z-constant z-numeric z-float z-rust">2.</span><span class="z-constant z-numeric z-float z-rust">0</span> <span class="z-keyword z-operator z-arithmetic z-rust">+</span> rng<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">gen_range</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-keyword z-operator z-arithmetic z-rust">-</span>displacement<span class="z-keyword z-operator z-range z-rust">..</span><span class="z-keyword z-operator z-assignment z-rust">=</span>displacement</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    points<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">[</span>mid<span class="z-punctuation z-section z-group z-end z-rust">]</span></span> <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-support z-type z-rust">Some</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>mid_val</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> new_displacement <span class="z-keyword z-operator z-assignment z-rust">=</span> displacement <span class="z-keyword z-operator z-arithmetic z-rust">*</span> <span class="z-constant z-numeric z-float z-rust">2.</span><span class="z-constant z-numeric z-float z-rust">0</span><span class="z-storage z-type z-numeric z-rust">f32</span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">pow</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-keyword z-operator z-arithmetic z-rust">-</span>smoothness</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-support z-function z-rust">fill</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>rng<span class="z-punctuation z-separator z-rust">,</span> points<span class="z-punctuation z-separator z-rust">,</span> i<span class="z-punctuation z-separator z-rust">,</span> mid<span class="z-punctuation z-separator z-rust">,</span> steps <span class="z-keyword z-operator z-arithmetic z-rust">-</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">1</span><span class="z-punctuation z-separator z-rust">,</span> new_displacement<span class="z-punctuation z-separator z-rust">,</span> smoothness</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-support z-function z-rust">fill</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>rng<span class="z-punctuation z-separator z-rust">,</span> points<span class="z-punctuation z-separator z-rust">,</span> mid<span class="z-punctuation z-separator z-rust">,</span> j<span class="z-punctuation z-separator z-rust">,</span> steps <span class="z-keyword z-operator z-arithmetic z-rust">-</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">1</span><span class="z-punctuation z-separator z-rust">,</span> new_displacement<span class="z-punctuation z-separator z-rust">,</span> smoothness</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"></span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span><span class="z-source z-rust">
+</span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-rust"><span class="z-storage z-type z-function z-rust">fn</span> </span><span class="z-entity z-name z-function z-rust">compute_points</span></span><span class="z-meta z-generic z-rust"><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span>R<span class="z-punctuation z-separator z-rust">:</span> Rng<span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">(</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">rng</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-keyword z-operator z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> R,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">steps</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">u32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">initial_displacement</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust">    <span class="z-variable z-parameter z-rust">smoothness</span><span class="z-punctuation z-separator z-rust">:</span> <span class="z-storage z-type z-rust">f32</span>,
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"></span><span class="z-meta z-function z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-end z-rust">)</span></span></span></span><span class="z-meta z-function z-rust"> <span class="z-meta z-function z-return-type z-rust"><span class="z-punctuation z-separator z-rust">-&gt;</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-storage z-type z-rust">f32</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span></span> </span><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> size <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">2</span><span class="z-storage z-type z-numeric z-rust">usize</span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">pow</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>steps</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">+</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">1</span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> <span class="z-storage z-modifier z-rust">mut</span> points<span class="z-punctuation z-separator z-rust">:</span> <span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Option</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-storage z-type z-rust">f32</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span> <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-support z-macro z-rust">vec!</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">[</span><span class="z-support z-type z-rust">None</span><span class="z-punctuation z-separator z-rust">;</span> size<span class="z-punctuation z-section z-group z-end z-rust">]</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> i <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">0</span><span class="z-storage z-type z-numeric z-rust">usize</span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> j <span class="z-keyword z-operator z-assignment z-rust">=</span> points<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">len</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">-</span> <span class="z-constant z-numeric z-integer z-decimal z-rust">1</span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    points<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">[</span>i<span class="z-punctuation z-section z-group z-end z-rust">]</span></span> <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-support z-type z-rust">Some</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-constant z-numeric z-float z-rust">0.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    points<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">[</span>j<span class="z-punctuation z-section z-group z-end z-rust">]</span></span> <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-support z-type z-rust">Some</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-constant z-numeric z-float z-rust">0.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    <span class="z-support z-function z-rust">fill</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        rng<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        <span class="z-keyword z-operator z-bitwise z-rust">&amp;</span><span class="z-storage z-modifier z-rust">mut</span> points<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        i<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        j<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        steps<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        initial_displacement<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">        smoothness<span class="z-punctuation z-separator z-rust">,</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"><span class="z-meta z-group z-rust">    </span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">    points
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">        <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">into_iter</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">        <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">filter_map</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-meta z-path z-rust">std<span class="z-punctuation z-accessor z-rust">::</span></span><span class="z-meta z-path z-rust">convert<span class="z-punctuation z-accessor z-rust">::</span></span>identity</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust">        <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-meta z-path z-rust">collect<span class="z-punctuation z-accessor z-rust">::</span></span><span class="z-meta z-generic z-rust"><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-keyword z-operator z-rust">_</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span></span></span><span class="z-source z-rust"><span class="z-meta z-function z-rust"><span class="z-meta z-block z-rust"></span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span>
+</span></code></pre>
+<p>I won't deep dive into every line here, but I'll pick out a couple of specifics
+to go over.</p>
+<p>I compute <code>new_displacement</code> like this:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-storage z-type z-rust">let</span> new_displacement <span class="z-keyword z-operator z-assignment z-rust">=</span> displacement <span class="z-keyword z-operator z-arithmetic z-rust">*</span> <span class="z-constant z-numeric z-float z-rust">2.</span><span class="z-constant z-numeric z-float z-rust">0</span><span class="z-storage z-type z-numeric z-rust">f32</span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">pow</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-keyword z-operator z-arithmetic z-rust">-</span>smoothness</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></code></pre>
+<p>This is borrowed from the math in Paul Martz' blog post that I linked above.
+If you're like me though, you like to work out the math as you translate it to
+code to make sure you understand what you're doing.
+This computation is fairly trivial, but it's still a thing I like to do, personally.</p>
+<p>Since $x^0 = 1, \space \forall x$ and $x^{-y} = {1 \over {x^y}}$, we can quickly
+compute the following test values:</p>
+<table><thead><tr><th style="text-align: left"><code>smoothness</code></th><th style="text-align: right">Multiplicative Factor</th></tr></thead><tbody>
+<tr><td style="text-align: left">0.0</td><td style="text-align: right">1.0</td></tr>
+<tr><td style="text-align: left">0.5</td><td style="text-align: right">~0.707</td></tr>
+<tr><td style="text-align: left">1.0</td><td style="text-align: right">0.5</td></tr>
+</tbody></table>
+<p>Ok, so this computation maps <code>smoothness</code> to a value between <code>0.0</code> and <code>1.0</code>,
+and as <code>smoothness</code> grows, the resulting computation shrinks, resulting in
+<code>new_displacement</code> being less-than-or-equal to <code>displacement</code>.
+Makes sense.</p>
+<p>Then, there's also this little section at the bottom of <code>compute_points</code>:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust">points
+</span><span class="z-source z-rust">  <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">into_iter</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span><span class="z-source z-rust">  <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">filter_map</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-meta z-path z-rust">std<span class="z-punctuation z-accessor z-rust">::</span></span><span class="z-meta z-path z-rust">convert<span class="z-punctuation z-accessor z-rust">::</span></span>identity</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span><span class="z-source z-rust">  <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-meta z-path z-rust">collect<span class="z-punctuation z-accessor z-rust">::</span></span><span class="z-meta z-generic z-rust"><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-meta z-generic z-rust"><span class="z-support z-type z-rust">Vec</span><span class="z-punctuation z-definition z-generic z-begin z-rust">&lt;</span><span class="z-keyword z-operator z-rust">_</span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-punctuation z-definition z-generic z-end z-rust">&gt;</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span></code></pre>
+<p>This is a use of Rust's powerful iterators.
+In short, this function is doing the following:</p>
+<ul>
+<li><code>into_iter()</code> converts our <code>Vec&lt;Option&lt;f32&gt;&gt;</code> into an iterator;
+this method <strong>consumes</strong> the vector, meaning we are <strong>taking ownership</strong>
+of its valeus</li>
+<li><code>filter_map(...)</code> operates on an iterator, each element is mapped to an
+<code>Option</code>, and those which yield a <code>Some(...)</code> value are retained
+<ul>
+<li><code>std::convert::identity</code> is the identity function - since our values are
+already <code>Option&lt;T&gt;</code>, this works out quite elegantly</li>
+</ul>
+</li>
+<li><code>collect()</code> collects our iterator back into a collection, we specify a vector here</li>
+</ul>
+<p>This is one of the things I really love about Rust - this small expression is
+doing so much, and yet, it remains quite readable.</p>
+<p>Now with the core algorithm out of the way, I need a way to display things on
+screen.</p>
+<h2 id="enter-nannou"><a class="header-anchor no-hover-padding" href="#enter-nannou" aria-label="Anchor link for: enter-nannou"><span class="link-icon" aria-hidden="true"></span></a>
+Enter Nannou</h2>
+<p><a href="https://nannou.cc/">Nannou</a> is a creative coding framework for Rust.
+If you've ever played aroubnd with something like Processing, Nannou is
+conceptually similar.
+If this is all new to you, the TL;DR is: the Nannou framework allows you to
+quickly and easily spin up programs that produce audiovisual effects.
+Nannou can also do some cool stuff with lasers and other kinds of AV hardware,
+but I'm not well-versed enough to write about any of that.
+In my opinion, rapid prototyping is pretty important when your output is visual.
+You really want to be able to get something on the screen and build on it as
+quickly as possible.
+Nannou makes it very easy to get started with getting something on the screen,
+via their sketch concept.
+Then, once you want more functionality, you can use the regular Nannou app.</p>
+<p>I'll skip over copy-pasting a ton of boilerplate and just link to a commit here,
+commit <a href="https://github.com/SteveXCIV/banner-gen/commit/ce5415b71038f0ba0b55a9a7e6297f6b9f2502b5">ce5415b</a>
+has the first iteration of a nannou sketch to draw mountains on screen.</p>
+<p>It's barebones, and I personally don't think it's all that pretty, but it works.
+It generates something that looks like this, more or less:</p>
+<p><img src="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/./sample_1.png" alt="image of an outline that vaguely resembles a mountain" /></p>
+<h2 id="filling-in-the-outline"><a class="header-anchor no-hover-padding" href="#filling-in-the-outline" aria-label="Anchor link for: filling-in-the-outline"><span class="link-icon" aria-hidden="true"></span></a>
+Filling in the Outline</h2>
+<p>This outline looks vaguely mountain-like, but it's <em>just an outline</em>.
+To fill it in, I add a handful of extra points outside the bounds of the screen,
+like so:</p>
+<pre data-lang="rust" class="language-rust z-code"><code class="language-rust" data-lang="rust"><span class="z-source z-rust"><span class="z-storage z-type z-rust">let</span> left_cap <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-meta z-path z-rust">iter<span class="z-punctuation z-accessor z-rust">::</span></span>once<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>rect<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">left</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">-</span> <span class="z-constant z-numeric z-float z-rust">50.</span><span class="z-constant z-numeric z-float z-rust">0</span><span class="z-punctuation z-separator z-rust">,</span> rect<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">bottom</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">*</span> <span class="z-constant z-numeric z-float z-rust">20.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span><span class="z-source z-rust"><span class="z-storage z-type z-rust">let</span> right_cap <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-meta z-path z-rust">iter<span class="z-punctuation z-accessor z-rust">::</span></span>once<span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>rect<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">right</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">+</span> <span class="z-constant z-numeric z-float z-rust">50.</span><span class="z-constant z-numeric z-float z-rust">0</span><span class="z-punctuation z-separator z-rust">,</span> rect<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">bottom</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">*</span> <span class="z-constant z-numeric z-float z-rust">2.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span><span class="z-source z-rust"><span class="z-storage z-type z-rust">let</span> points <span class="z-keyword z-operator z-assignment z-rust">=</span> model<span class="z-punctuation z-accessor z-dot z-rust">.</span>points<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">iter</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">cloned</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">enumerate</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">map</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-meta z-function z-closure z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-punctuation z-section z-parameters z-begin z-rust">|</span></span></span><span class="z-meta z-function z-closure z-rust"><span class="z-meta z-function z-parameters z-rust"><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-variable z-parameter z-rust">i</span><span class="z-punctuation z-separator z-rust">,</span> <span class="z-variable z-parameter z-rust">y</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-section z-parameters z-end z-rust">|</span></span> </span><span class="z-meta z-function z-closure z-rust"><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-begin z-rust">{</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-group z-rust"><span class="z-meta z-function z-closure z-rust"><span class="z-meta z-block z-rust">    <span class="z-storage z-type z-rust">let</span> x <span class="z-keyword z-operator z-assignment z-rust">=</span> <span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>i <span class="z-keyword z-operator z-rust">as</span> <span class="z-storage z-type z-rust">f32</span> <span class="z-keyword z-operator z-arithmetic z-rust">*</span> width_per_step</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span> <span class="z-keyword z-operator z-arithmetic z-rust">+</span> rect<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">left</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-group z-rust"><span class="z-meta z-function z-closure z-rust"><span class="z-meta z-block z-rust">    <span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>x<span class="z-punctuation z-separator z-rust">,</span> y <span class="z-keyword z-operator z-arithmetic z-rust">*</span> <span class="z-constant z-numeric z-float z-rust">100.</span><span class="z-constant z-numeric z-float z-rust">0</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span></span></span></span><span class="z-source z-rust"><span class="z-meta z-group z-rust"><span class="z-meta z-function z-closure z-rust"><span class="z-meta z-block z-rust"></span><span class="z-meta z-block z-rust"><span class="z-punctuation z-section z-block z-end z-rust">}</span></span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span><span class="z-source z-rust">draw<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">polygon</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span><span class="z-source z-rust">    <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">color</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span><span class="z-constant z-other z-rust">PINK</span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span>
+</span><span class="z-source z-rust">    <span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">points</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>left_cap<span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">chain</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>points</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-accessor z-dot z-rust">.</span><span class="z-support z-function z-rust">chain</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-begin z-rust">(</span>right_cap</span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span></span><span class="z-meta z-group z-rust"><span class="z-punctuation z-section z-group z-end z-rust">)</span></span><span class="z-punctuation z-terminator z-rust">;</span>
+</span></code></pre>
+<p>Combining <code>iter::once()</code> and <code>chain()</code> makes it quick and easy to do this.
+I also added basic keyboard interaction to avoid recompiling every time I wanted
+a new image.
+Pressing <code>space</code> now regenerates the mountain image.
+That code is in commit <a href="https://github.com/SteveXCIV/banner-gen/commit/34b4e5928744e9ab2238c9751230beb507be2e4e">34b4e59</a>.
+This generates mountains that look a bit more.. <em>mountainy</em>.</p>
+<p><img src="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/./sample_2.png" alt="image of a filled-in polygon that vaguely resembles a mountain" /></p>
+<h2 id="multiple-layers"><a class="header-anchor no-hover-padding" href="#multiple-layers" aria-label="Anchor link for: multiple-layers"><span class="link-icon" aria-hidden="true"></span></a>
+Multiple Layers</h2>
+<p>Now that I had some vaguely mountain-shaped polygon on my screen, I decided to
+expand the program a bit more to support <em>layers</em>.
+The idea is that a <code>Layer</code> struct could wrap a set of points as well as a
+"baseline" Y coordinate.
+This would allow me to draw multiple mountain ranges stacked on top of each other,
+giving the illusion of distance, or something like that.
+While I was at it, I also added in the <a href="https://crates.io/crates/colorgrad"><code>colorgrad</code></a>
+crate for some nice gradients, and wrote a very simple wrapper type to allow me
+to convert <code>colorgrad</code> colors into Nannou colors.
+I sample the gradients based on which layer I'm rendering in order to get
+evenly-spaced colors for each layer.
+That code can be found in commit <a href="https://github.com/SteveXCIV/banner-gen/commit/51b18ea4d75b3ae73470a91e9da341c8f8e1bdc4">51b18ea</a>.</p>
+<h2 id="wrapping-it-up-for-now"><a class="header-anchor no-hover-padding" href="#wrapping-it-up-for-now" aria-label="Anchor link for: wrapping-it-up-for-now"><span class="link-icon" aria-hidden="true"></span></a>
+Wrapping it Up (for now)</h2>
+<p>Finally, I added three very small final adjustments for the time being.
+First, I renamed some variables and parameters to read more easily.
+Secondly, I adjusted the default screen size to match the dimensions I was after.
+Third, I made it so pressing the <code>S</code> key saves the image to the current
+working directory.
+When all was said and done, I ended up with the following image, which,
+at the time of writing, adorns my Mastodon profile:</p>
+<p><img src="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/./final.png" alt="an image of an abstract mountain range" /></p>
+<p>This version of the code is commit <a href="https://github.com/SteveXCIV/banner-gen/commit/56e5fe30d328e8ae0611859d035381bfe2964d47">56e5fe3</a>.</p>
+<h2 id="final-notes"><a class="header-anchor no-hover-padding" href="#final-notes" aria-label="Anchor link for: final-notes"><span class="link-icon" aria-hidden="true"></span></a>
+Final Notes</h2>
+<p>Before I sign off on this post, I want to address a couple of issues with this
+code.
+This project is very much so what my CS 4500 professor would have called a
+<strong>"garage program"</strong>.
+Essentially, it's in a rough state, it looks like something I whipped up in my
+garage.
+Frankly, it kind of is, just sub "garage" out for "living room couch".</p>
+<p>Here's a list of things I definitely want to come back and address to make this
+program more useful and more.. complete?</p>
+<ul>
+<li>there are no tests anywhere in sight; the UI is probably the heaviest lift
+here, but there's no reason the basic algorithm can't be tested</li>
+<li>everything is shoved into a <code>main.rs</code> file; the program is quite small now,
+but keepng everything in <code>main.rs</code> is not scalable</li>
+<li>it's not possible to specify any parameters; there aren't "magic numbers",
+but if the parameters can be named, they can be converted into command line args
+<ul>
+<li>one could imagine specifying steps, displacement, smoothness, gradient, etc.</li>
+</ul>
+</li>
+<li>there's no non-interactive mode, you need to run the GUI to generate an image</li>
+<li>this is kind-of a limitation of Nannou because it's built around a windowing
+system, however, it is possible to run one frame then exit</li>
+<li>perhaps in the future, there could be more image generators than just "mountains"</li>
+</ul>
+<p>If you've made it this far, thanks so much for reading!
+I want to continue blogging about this project as I build it out, stay tuned for
+more.</p>
+
+        </section>
+
+        
+                
+                
+                    
+                        
+                        
+                        
+                    
+                    
+                        
+                        
+                        
+                    
+                
+                
+            <nav class="full-width article-navigation">
+                <div><a href="https://www.stevexciv.com/blog/zero-to-prototype-trying-out-the-mash-stack/" aria-label="Next" aria-describedby="left_title"><span class="arrow">←</span>&nbsp;Next</a>
+                <p aria-hidden="true" id="left_title">Zero to Prototype: Trying Out the MASH Stack</p></div>
+                <div><a href="https://www.stevexciv.com/blog/back-to-blogging/" aria-label="Prev" aria-describedby="right_title">Prev&nbsp;<span class="arrow">→</span></a>
+                <p aria-hidden="true" id="right_title">Back to Blogging</p></div>
+            </nav>
+        
+        
+
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+        
+
+    </article>
+</main>
+
+    <div id="button-container">
+        
+        
+            <div id="toc-floating-container">
+                <input type="checkbox" id="toc-toggle" class="toggle"/>
+                <label for="toc-toggle" class="overlay"></label>
+                <label for="toc-toggle" id="toc-button" class="button" title="Toggle Table of Contents">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M414.82-193.094q-18.044 0-30.497-12.32-12.453-12.319-12.453-30.036t12.453-30.086q12.453-12.37 30.497-12.37h392.767q17.237 0 29.927 12.487 12.69 12.486 12.69 30.203 0 17.716-12.69 29.919t-29.927 12.203H414.82Zm0-244.833q-18.044 0-30.497-12.487Q371.87-462.9 371.87-480.45t12.453-29.92q12.453-12.369 30.497-12.369h392.767q17.237 0 29.927 12.511 12.69 12.512 12.69 29.845 0 17.716-12.69 30.086-12.69 12.37-29.927 12.37H414.82Zm0-245.167q-18.044 0-30.497-12.32t-12.453-30.037q0-17.716 12.453-30.086 12.453-12.369 30.497-12.369h392.767q17.237 0 29.927 12.486 12.69 12.487 12.69 30.203 0 17.717-12.69 29.92-12.69 12.203-29.927 12.203H414.82ZM189.379-156.681q-32.652 0-55.878-22.829t-23.226-55.731q0-32.549 23.15-55.647 23.151-23.097 55.95-23.097 32.799 0 55.313 23.484 22.515 23.484 22.515 56.246 0 32.212-22.861 54.893-22.861 22.681-54.963 22.681Zm0-245.167q-32.652 0-55.878-23.134-23.226-23.135-23.226-55.623 0-32.487 23.467-55.517t56.12-23.03q32.102 0 54.721 23.288 22.62 23.288 22.62 55.775 0 32.488-22.861 55.364-22.861 22.877-54.963 22.877Zm-.82-244.833q-32.224 0-55.254-23.288-23.03-23.289-23.03-55.623 0-32.333 23.271-55.364 23.272-23.03 55.495-23.03 32.224 0 55.193 23.288 22.969 23.289 22.969 55.622 0 32.334-23.21 55.364-23.21 23.031-55.434 23.031Z"/></svg>
+                </label>
+                <div class="toc-content">
+                    
+
+<div class="toc-container">
+    
+
+    <ul>
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#creative-coding-generating-banner-images">Creative Coding: Generating Banner Images</a>
+                    
+                        <ul>
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#picking-a-theme">Picking a Theme</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#midpoint-displacement-in-rust">Midpoint Displacement in Rust</a>
+                                        
+                                            <ul>
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#initial-brainstorm">Initial Brainstorm</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#the-actual-approach">The Actual Approach</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                            </ul>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#enter-nannou">Enter Nannou</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#filling-in-the-outline">Filling in the Outline</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#multiple-layers">Multiple Layers</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#wrapping-it-up-for-now">Wrapping it Up (for now)</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/#final-notes">Final Notes</a>
+                                        
+                                    </li>
+                                
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+    </ul>
+</div>
+
+
+                </div>
+            </div>
+        
+
+        
+        
+
+        
+        <a href="#" id="top-button" class="no-hover-padding" title="Go to the top of the page">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"/></svg>
+        </a>
+    </div>
+
+
+<link rel="stylesheet" href="https://www.stevexciv.com/katex.min.css">
+    <script defer src="https://www.stevexciv.com/js/katex.min.js"></script><span id="copy-success" class="hidden">
+        Copied!
+    </span>
+    <span id="copy-init" class="hidden">
+        Copy code to clipboard
+    </span>
+    <script defer src="https://www.stevexciv.com/js/copyCodeToClipboard.min.js"></script>
+
+
+    </div>
+    <footer>
+    <section>
+        <nav class="socials nav-navs"><ul><li>
+                        <a class="nav-links no-hover-padding social" rel="" 
+
+ href="https://www.stevexciv.com/atom.xml">
+                        <img loading="lazy" alt="feed" title="feed" src="https://www.stevexciv.com/social_icons/rss.svg">
+                        </a>
+                    </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://github.com/SteveXCIV/">
+                                    <img loading="lazy" alt="github" title="github" src="https://www.stevexciv.com/social_icons/github.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://www.linkedin.com/in/steve-troetti">
+                                    <img loading="lazy" alt="linkedin" title="linkedin" src="https://www.stevexciv.com/social_icons/linkedin.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://bsky.app/profile/stevexciv.com">
+                                    <img loading="lazy" alt="bluesky" title="bluesky" src="https://www.stevexciv.com/social_icons/bluesky.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://mastodon.social/@stevexciv">
+                                    <img loading="lazy" alt="mastodon" title="mastodon" src="https://www.stevexciv.com/social_icons/mastodon.svg">
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            
+        </nav>
+
+        
+        <nav class="nav-navs">
+        </nav>
+
+        <div class="credits">
+            <small>
+                
+    
+    
+    
+    
+        
+    
+        
+    
+
+    
+
+    
+    
+    
+
+    
+    
+    <p><p>© 2025 Steve Troetti • Unless otherwise noted, the content in this website is available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> license.</p>
+</p>
+
+                
+                Powered by
+                <a rel="" 
+
+ href="https://www.getzola.org">Zola</a>
+                &amp;
+                <a rel="" 
+
+ href="https://github.com/welpo/tabi">tabi</a>
+
+                </small>
+        </div>
+    </section>
+
+    <div id="searchModal" class="search-modal js" role="dialog" aria-labelledby="modalTitle">
+    <h1 id="modalTitle" class="visually-hidden">Search</h1>
+    <div id="modal-content">
+        <div id="searchBar">
+            <div class="search-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                    <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                </svg>
+            </div>
+            <input id="searchInput" role="combobox" autocomplete="off" spellcheck="false" aria-expanded="false" aria-controls="results-container" placeholder="Search…"/>
+            <div id="clear-search" class="close-icon interactive-icon" tabindex="0" role="button" title="Clear search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                </svg>
+            </div>
+        </div>
+        <div id="results-container">
+            <div id="results-info"><span id="zero_results"> No results</span>
+                <span id="one_results"> $NUMBER result</span>
+                <span id="many_results"> $NUMBER results</span><span id="two_results"> $NUMBER results</span>
+                <span id="few_results"> $NUMBER results</span>
+            </div>
+            <div id="results" role="listbox"></div>
+        </div>
+    </div>
+</div>
+</footer>
+
+</body>
+
+</html>

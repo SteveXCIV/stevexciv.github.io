@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8"><meta http-equiv="Content-Security-Policy"
+content="default-src 'self';font-src &#x27;self&#x27; data:;img-src &#x27;self&#x27; https:&#x2F;&#x2F;* data:;media-src &#x27;self&#x27;;style-src &#x27;self&#x27;;frame-src player.vimeo.com https:&#x2F;&#x2F;www.youtube-nocookie.com;connect-src 'self';script-src 'self' 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base" content="https://www.stevexciv.com">
+
+    
+    <title>
+Giving Go a Try • Steve Troetti's Blog</title>
+
+    
+    
+        <link rel="icon" type="image/png" href="https://www.stevexciv.com/images/favicon.ico"/>
+    
+    
+
+    
+    
+        
+            
+            
+                
+                    <link rel="alternate" type="application/atom+xml" title="Steve Troetti's Blog - Atom Feed" href="https://www.stevexciv.com/atom.xml">
+                
+            
+                
+                    <link rel="alternate" type="application/rss+xml" title="Steve Troetti's Blog - RSS Feed" href="https://www.stevexciv.com/rss.xml">
+                
+            
+        
+    
+
+    
+    
+    
+        
+            <link rel="stylesheet" href="https://www.stevexciv.com/custom_subset.css?h=0b9535a28bc3d5bf2321">
+        
+    
+
+    
+        <link rel="stylesheet" href="https://www.stevexciv.com/main.css?h=8fdd91b344907eec17e2" />
+        <link rel="stylesheet" href="https://www.stevexciv.com/skins/lowcontrast_orange.css?h=43aaccb17d8ec616ace4" />
+
+    <meta name="color-scheme" content="dark" />
+        <meta name="description" content="A constructive, honest review of my first real Go project: a CLI todo app." />
+        <meta property="og:description" content="A constructive, honest review of my first real Go project: a CLI todo app." />
+
+    
+
+    <meta property="og:title" content="Giving Go a Try" />
+    <meta property="og:type" content="article" />
+
+    
+<meta property="og:locale" content="en_GB" />
+
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.stevexciv.com&#x2F;blog&#x2F;giving-golang-a-try&#x2F;" /><meta property="og:site_name" content="Steve Troetti&#x27;s Blog"><script defer src="https://www.stevexciv.com/search_index.en.js?h=23565f36ca1bebd67f9b"></script>
+        <script defer src="https://www.stevexciv.com/js/searchElasticlunr.min.js?h=3626c0ef99daa745b31e"></script>
+
+        </head>
+
+
+<body>
+    <header>
+    <nav class="navbar">
+        <div class="nav-title">
+            <a class="home-title" href="https://www.stevexciv.com">Steve Troetti&#x27;s Blog</a>
+        </div>
+            <div class="nav-navs">
+                <ul>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding" href="https://www.stevexciv.com/blog/">blog
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding" href="https://www.stevexciv.com/tags/">tags
+                                </a>
+                            </li>
+                        <li class="menu-icons-container">
+                        <ul class="menu-icons-group">
+                            <li class="js menu-icon">
+                                <div role="button" tabindex="0" id="search-button" class="search-icon interactive-icon" title="Click or press $SHORTCUT to open search" aria-label="Click or press $SHORTCUT to open search">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                                    </svg>
+                                </div>
+                            </li>
+
+                            
+                            
+
+                            </ul>
+                    </li>
+                </ul>
+            </div>
+        
+    </nav>
+</header>
+
+    <div class="content">
+
+        
+        
+
+
+
+
+<main>
+    <article>
+        <h1 class="article-title">
+            Giving Go a Try
+        </h1>
+
+        <ul class="meta">
+                <li>4th Sep 2025</li><li title="2249 words"><span class='separator' aria-hidden='true'>•</span>12 min read</li><li class="tag"><span class='separator' aria-hidden='true'>•</span>Tags:&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/go/">go</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/golang/">golang</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/learning/">learning</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/cli/">cli</a></li></ul><ul class="meta last-updated"><li>Updated on 4th Sep 2025</li>
+        </ul>
+
+        <section class="body"><p>In this post, I'll document my experience building an app in Go, which is a new-to-me language.
+Keep reading if you want to know more about how I built this, and my first impressions of Go.</p>
+<p>If you just want to see the code, hop on over to <a href="https://github.com/SteveXCIV/golang-todo-cli">the repository</a>.</p>
+<h1 id="background"><a class="header-anchor no-hover-padding" href="#background" aria-label="Anchor link for: background"><span class="link-icon" aria-hidden="true"></span></a>
+Background</h1>
+<p>If you know me, or you've read my writing before, you'll know that I'm a Java developer by day, and a Rustacean by night.
+I've also done some Python here and there as the situation called for, but that's been about all I've worked with in the past 5 years or so.
+While I don't think Java will ever go away, and I still love Rust, I was itching to try something <em>new</em>.</p>
+<p>For a moment, let's rewind back to late 2019, I was working with a small group on a project that I was pretty excited about.
+It was a Python app that, at the time, we felt had a lot of potential.
+Unfortunately, however, that project ended up fizzling out, but I still remember one thing from back then.
+The software we had been building processed near real-time data from multiple feeds, and we were quickly outgrowing Python.
+We'd been talking for some time about a Go port, because one of our contributors was familiar with Go.</p>
+<p>I never got a chance to explore Go back then, and I don't really like leaving things unfinished.</p>
+<p>Now that I was looking for something new, I decided to just <em title="(sorry)">Go</em> for it.</p>
+<h2 id="deciding-what-to-build"><a class="header-anchor no-hover-padding" href="#deciding-what-to-build" aria-label="Anchor link for: deciding-what-to-build"><span class="link-icon" aria-hidden="true"></span></a>
+Deciding What to Build</h2>
+<p>I remember I had a professor back in undergrad that loved to use the "Lazy developers are good developers" line.
+That professor would be proud because I got a bit lazy when picking a project.</p>
+<p>I fired up a chat session with an LLM and asked for a project plan to learn about Go.
+Specifically, I requested approximately 8 hours of work, basic but flexible requirements, and some focus areas for my learnings.
+My plan was to treat this as I would any LLM output: a starting point that I would then workshop with my own human intuition.</p>
+<p>The plan that I received was remarkably mundane: a simple TODO app with a CLI.
+I could have come up with this on my own, sure, but I was still thankful to have some notes to go off of.
+So there I had my plan, I knew what I was going to build.</p>
+<p>I was going to make a simple TODO CLI that stored tasks as a JSON document and had basic CRUD operations - not bad.</p>
+<p>The rest of this post details my experience building the application.</p>
+<h1 id="getting-started"><a class="header-anchor no-hover-padding" href="#getting-started" aria-label="Anchor link for: getting-started"><span class="link-icon" aria-hidden="true"></span></a>
+Getting Started</h1>
+<p>I began my Go journey at the docs.
+There happens to be a conveniently-placed "Get Started" button which links to <a href="https://go.dev/learn/">learning resources</a>.</p>
+<p>Two that I found particularly helpful were:</p>
+<ul>
+<li><a href="https://go.dev/tour/welcome/1">A Tour of Go</a></li>
+<li><a href="https://gobyexample.com/">Go by Example</a></li>
+</ul>
+<p>I've always been an <em>experiential</em> learner, so I was <strong>thrilled</strong> to see that there's two example-based resources to learn from.
+After a brisk pass through the tour, and a couple of cherry-picked examples, I decided it was time to write some code.</p>
+<h1 id="implementation-experience"><a class="header-anchor no-hover-padding" href="#implementation-experience" aria-label="Anchor link for: implementation-experience"><span class="link-icon" aria-hidden="true"></span></a>
+Implementation Experience</h1>
+<p><strong>NOTE:</strong> I've kept the <a href="https://github.com/SteveXCIV/golang-todo-cli/blob/main/PROJECT_PLAN.md">plan docuement</a> that I AI-generated in the repository as a <em>reference</em>.
+I've deviated from it in my actual implementation, but it still served as a decent scaffold.</p>
+<h2 id="creating-the-task-struct"><a class="header-anchor no-hover-padding" href="#creating-the-task-struct" aria-label="Anchor link for: creating-the-task-struct"><span class="link-icon" aria-hidden="true"></span></a>
+Creating the Task struct</h2>
+<p>The first step of the plan is to define the <code>Task</code> struct for storing our TODOs.
+This sounds perfectly reasonable because this is going to be the primary data type we pass around.
+I settled on the following fields:</p>
+<ul>
+<li><code>Id</code>: a unique integer ID for tasks</li>
+<li><code>Title</code>: the name of the task</li>
+<li><code>Priority</code>: an enum denoting the low/medium/high priority</li>
+<li><code>DueDate</code>: when this task is due</li>
+<li><code>Category</code>: an optional user-provided category</li>
+<li><code>Status</code>: an enum denoting pending/complete state</li>
+</ul>
+<p>This was my first encounter with Go-specific behaviors.</p>
+<h3 id="enums"><a class="header-anchor no-hover-padding" href="#enums" aria-label="Anchor link for: enums"><span class="link-icon" aria-hidden="true"></span></a>
+Enums</h3>
+<p>Go has no built-in "enum" type.
+Instead, enums are just constants with an opaque <code>type</code> alias.
+They also typically use a built-in called <code>iota</code> which is a language feature more-or-less purpose-built for enums.
+<a href="https://gobyexample.com/enums">Go by Example</a> does a good job of explaining the enum pattern.</p>
+<h4 id="iota"><a class="header-anchor no-hover-padding" href="#iota" aria-label="Anchor link for: iota"><span class="link-icon" aria-hidden="true"></span></a>
+Iota</h4>
+<p>If you click through links from the "Go by Example" link above, you'll undoubtedly end up at the <a href="https://blog.learngoprogramming.com/golang-const-type-enums-iota-bc4befd096d3">Go blog post</a> on <code>iota</code>.</p>
+<p>The <code>iota</code> build-in is essentially an incrementing counter that resets inside a new <code>const</code> declaration block.
+The idea is that it's easy to assign incrementing values to enums:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">Priority</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">int</span></span>
+</span><span class="z-source z-go">
+</span><span class="z-source z-go"><span class="z-storage z-type z-keyword z-const z-go">const</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span>
+</span><span class="z-source z-go">  <span class="z-variable z-other z-constant z-declaration z-go">Low</span>     <span class="z-storage z-type z-go">Priority</span> <span class="z-keyword z-operator z-assignment z-go">=</span> <span class="z-constant z-numeric z-integer z-decimal z-go">iota</span> <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> iota -&gt; 0
+</span></span><span class="z-source z-go">  <span class="z-variable z-other z-constant z-declaration z-go">Medium</span>                  <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> iota -&gt; 1
+</span></span><span class="z-source z-go">  <span class="z-variable z-other z-constant z-declaration z-go">High</span>                    <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> iota -&gt; 2
+</span></span><span class="z-source z-go"><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></code></pre>
+<p>It works well for this purpose, but it also has <strong>tons</strong> of other uses, and my first impression is that it may be too many.</p>
+<h5 id="iota-iteratively-evaluates-expressions"><a class="header-anchor no-hover-padding" href="#iota-iteratively-evaluates-expressions" aria-label="Anchor link for: iota-iteratively-evaluates-expressions"><span class="link-icon" aria-hidden="true"></span></a>
+Iota Iteratively Evaluates Expressions</h5>
+<p>The initial value can be an <em>expression</em> using <code>iota</code>.
+This expression gets re-evaluated on each line, with the incrmented <code>iota</code> value:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">DoubleX</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">int</span></span>
+</span><span class="z-source z-go">
+</span><span class="z-source z-go"><span class="z-storage z-type z-keyword z-const z-go">const</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span>
+</span><span class="z-source z-go">	<span class="z-variable z-other z-constant z-declaration z-go">Zero</span> <span class="z-storage z-type z-go">DoubleX</span> <span class="z-keyword z-operator z-assignment z-go">=</span> <span class="z-constant z-numeric z-integer z-decimal z-go">2</span> <span class="z-keyword z-operator z-go">*</span> <span class="z-constant z-numeric z-integer z-decimal z-go">iota</span>  <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> iota -&gt; 2 * 0 = 0
+</span></span><span class="z-source z-go">	<span class="z-variable z-other z-constant z-declaration z-go">One</span>                      <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> iota -&gt; 2 * 1 = 2
+</span></span><span class="z-source z-go">	<span class="z-variable z-other z-constant z-declaration z-go">Two</span>                      <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> iota -&gt; 2 * 2 = 4
+</span></span><span class="z-source z-go"><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></code></pre>
+<p>This is convenient, but it's also a lot of functionality packed into one feature.</p>
+<h5 id="iota-conclusion"><a class="header-anchor no-hover-padding" href="#iota-conclusion" aria-label="Anchor link for: iota-conclusion"><span class="link-icon" aria-hidden="true"></span></a>
+Iota - Conclusion</h5>
+<p>I think that <code>iota</code> is definitely an interesting convenience feature, but I'm not sure yet how I feel about how clever it allows developers to get.</p>
+<h3 id="field-naming"><a class="header-anchor no-hover-padding" href="#field-naming" aria-label="Anchor link for: field-naming"><span class="link-icon" aria-hidden="true"></span></a>
+Field Naming</h3>
+<p>My first inclination with the <code>Task</code> struct was to use <strong>lower-case</strong> names for the fields.
+I understood that Go treats these as <strong>package-private</strong> and though it would be fine.
+I was operating under the impression that I'd start with private fields and make them public (i.e. use a <code>TitleCase</code> name) as needed.
+One thing I didn't immediately realize, however, is that Go's built-in <code>json</code> module would ignore them.</p>
+<p>In retrospect, this is a reasonable design decision.
+You probably want your data objects to make all their meaningful fields public anyway; it also makes sense with how the Go implementation works (more on that later).</p>
+<h3 id="json-field-names"><a class="header-anchor no-hover-padding" href="#json-field-names" aria-label="Anchor link for: json-field-names"><span class="link-icon" aria-hidden="true"></span></a>
+JSON Field Names</h3>
+<p>One potential issue with this approach is that it couples the JSON field name with Go's convention-based access modifier system.
+Luckily, there's a way to decouple these.
+The <code>json</code> module also uses something called <a href="https://go.dev/wiki/Well-known-struct-tags">"struct tags"</a>.
+These are string literals that can appear next to <code>struct</code> fields.
+Other modules can access these values via reflection.
+The <code>json</code> module has <a href="https://pkg.go.dev/encoding/json#Marshal">a DSL</a> for controlling the conversion to JSON.</p>
+<p>Speaking of JSON marshalling, I really like how the Go standard library makes it easy to define custom output formats for types.
+Since enums are actually just integers, by default they get written as integer literals in the JSON output.
+Two easy function implementations can change that:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-var z-go">var</span> <span class="z-variable z-declaration z-go">priorityToString</span> <span class="z-keyword z-operator z-assignment z-go">=</span> <span class="z-storage z-type z-keyword z-map z-go">map</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-storage z-type z-go">Priority</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-other z-go">Low</span><span class="z-punctuation z-separator z-go">:</span>    <span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>LOW<span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-other z-go">Medium</span><span class="z-punctuation z-separator z-go">:</span> <span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>MEDIUM<span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-other z-go">High</span><span class="z-punctuation z-separator z-go">:</span>   <span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>HIGH<span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span><span class="z-source z-go">
+</span><span class="z-source z-go"><span class="z-storage z-type z-keyword z-var z-go">var</span> <span class="z-variable z-declaration z-go">stringToPriority</span> <span class="z-keyword z-operator z-assignment z-go">=</span> <span class="z-storage z-type z-keyword z-map z-go">map</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go">Priority</span><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>LOW<span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">:</span>    <span class="z-variable z-other z-go">Low</span><span class="z-punctuation z-separator z-go">,</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>MEDIUM<span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">:</span> <span class="z-variable z-other z-go">Medium</span><span class="z-punctuation z-separator z-go">,</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>HIGH<span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">:</span>   <span class="z-variable z-other z-go">High</span><span class="z-punctuation z-separator z-go">,</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span><span class="z-source z-go">
+</span><span class="z-source z-go"><span class="z-storage z-type z-keyword z-function z-go">func</span> <span class="z-meta z-function z-declaration z-go"><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">p</span> <span class="z-storage z-type z-go">Priority</span><span class="z-punctuation z-section z-parens z-end z-go">)</span></span><span class="z-meta z-function z-declaration z-go"> <span class="z-entity z-name z-function z-go">MarshalJSON</span></span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">byte</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">if</span> <span class="z-variable z-declaration z-go">str</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-declaration z-go">ok</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">priorityToString</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-variable z-other z-go">p</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-punctuation z-terminator z-go">;</span> <span class="z-variable z-other z-go">ok</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-keyword z-control z-go">return</span> <span class="z-variable z-other z-go">json</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Marshal</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">str</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>  <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> the JSON marshaller writes a string instead of an integer
+</span></span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">	<span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">return</span> <span class="z-constant z-language z-go">nil</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Errorf</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>unknown priority: <span class="z-constant z-other z-placeholder z-go">%d</span><span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-other z-go">p</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span><span class="z-source z-go">
+</span><span class="z-source z-go"><span class="z-storage z-type z-keyword z-function z-go">func</span> <span class="z-meta z-function z-declaration z-go"><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">p</span> <span class="z-keyword z-operator z-go">*</span><span class="z-storage z-type z-go">Priority</span><span class="z-punctuation z-section z-parens z-end z-go">)</span></span><span class="z-meta z-function z-declaration z-go"> <span class="z-entity z-name z-function z-go">UnmarshalJSON</span></span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">b</span> <span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">byte</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-storage z-type z-keyword z-var z-go">var</span> <span class="z-variable z-declaration z-go">k</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span>  <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> we parse the string
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> fail if the string isn&#39;t in the stringToPriority mapping
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">if</span> <span class="z-variable z-declaration z-go">err</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">json</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Unmarshal</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">b</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-keyword z-operator z-go">&amp;</span><span class="z-variable z-other z-go">k</span><span class="z-punctuation z-section z-parens z-end z-go">)</span><span class="z-punctuation z-terminator z-go">;</span> <span class="z-variable z-other z-go">err</span> <span class="z-keyword z-operator z-go">!=</span> <span class="z-constant z-language z-go">nil</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-keyword z-control z-go">return</span> <span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Errorf</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>priority should be a string, got <span class="z-constant z-other z-placeholder z-go">%s</span><span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-function z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">b</span><span class="z-punctuation z-section z-parens z-end z-go">)</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">	<span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">if</span> <span class="z-variable z-declaration z-go">val</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-declaration z-go">ok</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">stringToPriority</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-variable z-other z-go">k</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-punctuation z-terminator z-go">;</span> <span class="z-variable z-other z-go">ok</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-keyword z-operator z-go">*</span><span class="z-variable z-other z-go">p</span> <span class="z-keyword z-operator z-assignment z-go">=</span> <span class="z-variable z-other z-go">val</span>   <span class="z-comment z-line z-go"><span class="z-punctuation z-definition z-comment z-go">//</span> otherwise, set the Priority pointer to that value
+</span></span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-keyword z-control z-go">return</span> <span class="z-constant z-language z-go">nil</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">	<span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">return</span> <span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Errorf</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>unknown priority: <span class="z-constant z-other z-placeholder z-go">%s</span><span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-other z-go">k</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<h3 id="the-final-task-struct"><a class="header-anchor no-hover-padding" href="#the-final-task-struct" aria-label="Anchor link for: the-final-task-struct"><span class="link-icon" aria-hidden="true"></span></a>
+The Final Task Struct</h3>
+<p>After all was said and done, I had a <code>Task</code> struct that:</p>
+<ul>
+<li>has all fields listed above</li>
+<li>uses <code>camelCase</code> naming for JSON marshalling</li>
+<li>uses custom marshal/unmarshal <code>string</code> representation for all enums</li>
+</ul>
+<p>It didn't take me very long, and the code was pretty straightforward and fun to write.
+I also went ahead and added some tests, because I had been abusing my poor <code>main()</code> function to manually test.</p>
+<h2 id="creating-the-task-manager"><a class="header-anchor no-hover-padding" href="#creating-the-task-manager" aria-label="Anchor link for: creating-the-task-manager"><span class="link-icon" aria-hidden="true"></span></a>
+Creating the Task Manager</h2>
+<p>The plan also mentioned creating a task manager class for providing the CRUD operations.
+Based on the generated examples, I came up with a design for the API.</p>
+<p>I originally started off with a <code>Manager</code> struct, but I switched to an interface for a couple of reasons.
+My primary reason is that I like test driven development (TDD).
+Interfaces also make it quick and easy to make mock dependencies for testing very specfic scenarios.
+Here's what I ultimately ended up with:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">Manager</span> <span class="z-storage z-type z-keyword z-interface z-go">interface</span> <span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">AddTask</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">title</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-parameter z-go">priority</span> <span class="z-storage z-type z-go">Priority</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-parameter z-go">getDueDate</span> <span class="z-storage z-type z-keyword z-function z-go">func</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">time</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">Time</span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-storage z-type z-go">DueDate</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-parameter z-go">category</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-keyword z-operator z-go">*</span><span class="z-storage z-type z-go">Task</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">ListTasks</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">status</span> <span class="z-keyword z-operator z-go">*</span><span class="z-storage z-type z-go">Status</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-parameter z-go">priority</span> <span class="z-keyword z-operator z-go">*</span><span class="z-storage z-type z-go">Priority</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-parameter z-go">category</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-parameter z-go">overdueOnly</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">bool</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go">Task</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">SearchTasks</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">query</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go">Task</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">CompleteTask</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">id</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">int</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">DeleteTask</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">id</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">int</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>The implementation is fairly simple and just uses a slice of <code>Task</code> and linearly iterates them for list/search.
+I could have done something more sophisticated like using maps to store indices, but I kept it simple.
+My goal was just to learn Go, not to make the ideal TODO CLI.</p>
+<p>There are a couple of things I do think are noteworthy about this design.</p>
+<h3 id="the-getduedate-function-pointer"><a class="header-anchor no-hover-padding" href="#the-getduedate-function-pointer" aria-label="Anchor link for: the-getduedate-function-pointer"><span class="link-icon" aria-hidden="true"></span></a>
+The <code>getDueDate</code> Function Pointer</h3>
+<p>The design doc examples showed being able to specify strings like "today" and "tomorrow" for the due date.
+I decided to capture these cases elsewhere in the code, so instead of having an API to specify "special" dates, the <code>Manager</code> just takes a function and passes its own <code>now</code>.
+This also makes testing pretty comfy.</p>
+<h3 id="pointers-for-status-and-priority"><a class="header-anchor no-hover-padding" href="#pointers-for-status-and-priority" aria-label="Anchor link for: pointers-for-status-and-priority"><span class="link-icon" aria-hidden="true"></span></a>
+Pointers for Status and Priority</h3>
+<p>The <code>ListTasks</code> API is kind of interesting because it accepts status/priority for "is equal to"-style filtering.
+There isn't a built-in <code>Option</code> type in Go, so I used pointers because their "zero" value is <code>nil</code>.
+This works really nicely with how <code>struct</code>s use the zero value for unspecified fields.
+It means it I were to, for example, parse a "command" struct from the program arguments, I could leave the unspecified filtering arguments as <code>nil</code> very easily.</p>
+<p>Speaking of, let's talk about the <code>Command</code> interface.</p>
+<h2 id="creating-the-commands"><a class="header-anchor no-hover-padding" href="#creating-the-commands" aria-label="Anchor link for: creating-the-commands"><span class="link-icon" aria-hidden="true"></span></a>
+Creating the Commands</h2>
+<p>For my CLI commands, I created a very simple interface, it has a single <code>Execute</code> method which takes a <code>Manager</code> and returns <code>(string, error)</code>.
+Here's what that looks like in code:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">Command</span> <span class="z-storage z-type z-keyword z-interface z-go">interface</span> <span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">Execute</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">m</span> <span class="z-variable z-other z-go">tasks</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">Manager</span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>Then, in the same <code>cli.go</code> file, I stubbed out a top level <code>Parse</code> function, with this signature:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-function z-go">func</span> <span class="z-entity z-name z-function z-go">Parse</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">a</span> <span class="z-keyword z-operator z-go">*</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span><span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-storage z-type z-go">Command</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">error</span></span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span> <span class="z-keyword z-operator z-variadic z-go">...</span> <span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>I also stubbed out individual unexported helpers for parsing the individual commands.
+Commands more or less just delegate to <code>Manager</code>, but I do want to circle back one last time to <code>AddCommand</code>.
+The <code>struct</code> looks like this:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">AddCommand</span> <span class="z-storage z-type z-keyword z-struct z-go">struct</span> <span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-variable z-other z-member z-declaration z-go">Title</span>    <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-variable z-other z-member z-declaration z-go">Priority</span> <span class="z-variable z-other z-go">tasks</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">Priority</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-variable z-other z-member z-declaration z-go">Due</span>      <span class="z-storage z-type z-go">IntoDueDate</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-variable z-other z-member z-declaration z-go">Category</span> <span class="z-storage z-type z-go"><span class="z-support z-type z-builtin z-go">string</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>The <code>IntoDueDate</code> type is a second interface I made:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">IntoDueDate</span> <span class="z-storage z-type z-keyword z-interface z-go">interface</span> <span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go">	<span class="z-entity z-name z-function z-go">IntoDueDate</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">time</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">Time</span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-variable z-other z-go">tasks</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">DueDate</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>This is how I manage computing the timestamp for the <code>Manager.Add</code> API!
+Here's an example with <code>DueTomorrow</code>:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-type z-go">type</span> <span class="z-entity z-name z-type z-go">DueTomorrow</span> <span class="z-storage z-type z-keyword z-struct z-go">struct</span><span class="z-meta z-type z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span><span class="z-source z-go">
+</span><span class="z-source z-go"><span class="z-storage z-type z-keyword z-function z-go">func</span> <span class="z-meta z-function z-declaration z-go"><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">d</span> <span class="z-keyword z-operator z-go">*</span><span class="z-storage z-type z-go">DueTomorrow</span><span class="z-punctuation z-section z-parens z-end z-go">)</span></span><span class="z-meta z-function z-declaration z-go"> <span class="z-entity z-name z-function z-go">IntoDueDate</span></span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-parameter z-go">t</span> <span class="z-variable z-other z-go">time</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">Time</span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-variable z-other z-go">tasks</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-storage z-type z-go">DueDate</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">return</span> <span class="z-variable z-other z-go">tasks</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">DueDate</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">t</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Add</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">time</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-other z-member z-go">Hour</span> <span class="z-keyword z-operator z-go">*</span> <span class="z-constant z-numeric z-integer z-decimal z-go">24</span><span class="z-punctuation z-section z-parens z-end z-go">)</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>Once I had all of the commands implemented, wiring everything up was easy!</p>
+<h2 id="wiring-it-up"><a class="header-anchor no-hover-padding" href="#wiring-it-up" aria-label="Anchor link for: wiring-it-up"><span class="link-icon" aria-hidden="true"></span></a>
+Wiring it Up</h2>
+<p>One thing I <strong>really</strong> like about how this program turned out is just how simple everything is once it's all put together.
+The entire <code>main</code> method is very digestable and doesn't even require scrolling the page on my monitor:</p>
+<pre data-lang="go" class="language-go z-code"><code class="language-go" data-lang="go"><span class="z-source z-go"><span class="z-storage z-type z-keyword z-function z-go">func</span> <span class="z-entity z-name z-function z-go">main</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-punctuation z-section z-parens z-end z-go">)</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-declaration z-go">args</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">os</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-other z-member z-go">Args</span><span class="z-punctuation z-section z-brackets z-begin z-go">[</span><span class="z-constant z-numeric z-integer z-decimal z-go">1</span><span class="z-punctuation z-separator z-go">:</span><span class="z-punctuation z-section z-brackets z-end z-go">]</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-declaration z-go">cmd</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-declaration z-go">err</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">cli</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Parse</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-keyword z-operator z-go">&amp;</span><span class="z-variable z-other z-go">args</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">if</span> <span class="z-variable z-other z-go">err</span> <span class="z-keyword z-operator z-go">!=</span> <span class="z-constant z-language z-go">nil</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Println</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>Error parsing command: <span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-other z-go">err</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-variable z-other z-go">os</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Exit</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-constant z-numeric z-integer z-decimal z-go">1</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">	<span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-declaration z-go">m</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-declaration z-go">err</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">tasks</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">NewManager</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">if</span> <span class="z-variable z-other z-go">err</span> <span class="z-keyword z-operator z-go">!=</span> <span class="z-constant z-language z-go">nil</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Println</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>Error creating task manager: <span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-other z-go">err</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-variable z-other z-go">os</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Exit</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-constant z-numeric z-integer z-decimal z-go">1</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">	<span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-declaration z-go">res</span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-declaration z-go">err</span> <span class="z-keyword z-operator z-assignment z-go">:=</span> <span class="z-variable z-other z-go">cmd</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Execute</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">m</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-keyword z-control z-go">if</span> <span class="z-variable z-other z-go">err</span> <span class="z-keyword z-operator z-go">!=</span> <span class="z-constant z-language z-go">nil</span> <span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-begin z-go">{</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Println</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-string z-quoted z-double z-go"><span class="z-punctuation z-definition z-string z-begin z-go">&quot;</span>Error executing command: <span class="z-punctuation z-definition z-string z-end z-go">&quot;</span></span><span class="z-punctuation z-separator z-go">,</span> <span class="z-variable z-other z-go">err</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">		<span class="z-variable z-other z-go">os</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Exit</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-constant z-numeric z-integer z-decimal z-go">1</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-meta z-block z-go">	<span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go">	<span class="z-variable z-other z-go">fmt</span><span class="z-punctuation z-accessor z-dot z-go">.</span><span class="z-variable z-function z-go">Println</span><span class="z-punctuation z-section z-parens z-begin z-go">(</span><span class="z-variable z-other z-go">res</span><span class="z-punctuation z-section z-parens z-end z-go">)</span>
+</span></span><span class="z-source z-go"><span class="z-meta z-block z-go"><span class="z-punctuation z-section z-braces z-end z-go">}</span></span>
+</span></code></pre>
+<p>Just like that, my first Go program was written!</p>
+<h1 id="conclusion"><a class="header-anchor no-hover-padding" href="#conclusion" aria-label="Anchor link for: conclusion"><span class="link-icon" aria-hidden="true"></span></a>
+Conclusion</h1>
+<p>My overall impression of Go is that it's a language written for getting things done quickly.
+The language feature set is small.
+Default behaviors are something you should be aware of and rely on.
+The standard library is robust enough to get you writing code ASAP.</p>
+<p>What Go lacks in feature surface, it makes up for in having mostly sensible defaults.
+That being said, there were some things I found odd or surprising.
+Here's a couple of highlights of things I liked and things I didn't.</p>
+<h2 id="what-i-liked"><a class="header-anchor no-hover-padding" href="#what-i-liked" aria-label="Anchor link for: what-i-liked"><span class="link-icon" aria-hidden="true"></span></a>
+What I Liked</h2>
+<p><strong>Most defaults are sensible:</strong> do you have an <code>int</code>? Your zero value is <code>0</code>.
+A <code>string</code> is empty by default, so there's no need for a dedicated empty-checking function, just compare equality with <code>""</code>.
+Pointers are <code>nil</code> by default, so just be careful before trying to derefernce them.
+Most things behave the way you'd expect them to by default.</p>
+<p><strong>Table driven testing:</strong> I said earlier that I love TDD.
+Table-driven tests are, in my opinion, tragically underutilized.
+The fact that Go makes them so easy to write is a dream.</p>
+<p><strong>Extremely strong standard library:</strong> I mentioned earlier that the Go standard libary is <strong>really</strong> nice.
+I never needed to leave the standard library while building this app.
+While the app isn't perfect, it <em>is</em> completely usable and didn't take long to build.
+I didn't mention earlier, but there's even a <code>text/tabwriter</code> utility (<a href="https://pkg.go.dev/text/tabwriter">link</a>) for printing out tables.
+I used <code>text/tabwriter</code> for printing the <code>list</code> and <code>search</code> command results.
+Other honorable mentions not used in this project include <code>slog</code> for structured logging and a fully-featured template engine.
+That's just plain awesome.</p>
+<h2 id="what-i-disliked"><a class="header-anchor no-hover-padding" href="#what-i-disliked" aria-label="Anchor link for: what-i-disliked"><span class="link-icon" aria-hidden="true"></span></a>
+What I Disliked</h2>
+<p><strong>Date formatting:</strong> Go uses an example-based system for date format strings.
+Instead of <code>yyyy-MM-dd</code>, you say <code>2006-01-02</code>, and <em>therein lies the problem</em>.
+<a href="https://gobyexample.com/time-formatting-parsing">Go by Example</a> has some great, well, examples where you can see this in action.
+I stared at this reference time for a <strong>long</strong>, well, time.
+I eventually found out that this <a href="https://stackoverflow.com/a/28087574">SO answer</a> - as it turns out, the Go reference time is <code>1 2 3 4 5 6 7</code> in the form <code>month day hour minute second year zone-offset</code>.
+I really do not like this.
+It feels like an Easter egg hidden in the standard library.
+I don't mind the example-based format, but 1970-01-01 was already a perfectly decent epoch.</p>
+<p><strong>No Built-in Equals:</strong> Go does not allow types to redefine the behavior of <code>==</code>.
+You have to write your own <code>Equals</code> method.
+I found this a bit frustrating when writing tests, but luckily there's <code>reflect.DeepEqual</code>, which uses reflection, so it shouldn't be used in Production code.
+I do still find it a bit strange though, given how ergonomic it is to opt-into things like custom JSON marshalling.
+This isn't something I'm losing any sleep over, though.</p>
+<h1 id="final-thoughts"><a class="header-anchor no-hover-padding" href="#final-thoughts" aria-label="Anchor link for: final-thoughts"><span class="link-icon" aria-hidden="true"></span></a>
+Final Thoughts</h1>
+<p>The obvious question is whether or not I'd use Go again.
+In short, yes, I would.</p>
+<p>Depsite the small number of things I disliked, there was a lot to like.
+Go is small and fast, and that simplicity feels really nice.
+In the past I had a habit of prototyping an idea in Python and then actually implementing it for real in Rust or Java.</p>
+<p>With Go, I feel like I can skip the Python step.</p>
+
+        </section>
+
+        
+                
+                
+                    
+                    
+                        
+                        
+                        
+                    
+                
+                
+            <nav class="full-width article-navigation">
+                <div></div>
+                <div><a href="https://www.stevexciv.com/blog/zero-to-prototype-trying-out-the-mash-stack/" aria-label="Prev" aria-describedby="right_title">Prev&nbsp;<span class="arrow">→</span></a>
+                <p aria-hidden="true" id="right_title">Zero to Prototype: Trying Out the MASH Stack</p></div>
+            </nav>
+        
+        
+
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+        
+
+    </article>
+</main>
+
+    <div id="button-container">
+        
+        
+            <div id="toc-floating-container">
+                <input type="checkbox" id="toc-toggle" class="toggle"/>
+                <label for="toc-toggle" class="overlay"></label>
+                <label for="toc-toggle" id="toc-button" class="button" title="Toggle Table of Contents">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M414.82-193.094q-18.044 0-30.497-12.32-12.453-12.319-12.453-30.036t12.453-30.086q12.453-12.37 30.497-12.37h392.767q17.237 0 29.927 12.487 12.69 12.486 12.69 30.203 0 17.716-12.69 29.919t-29.927 12.203H414.82Zm0-244.833q-18.044 0-30.497-12.487Q371.87-462.9 371.87-480.45t12.453-29.92q12.453-12.369 30.497-12.369h392.767q17.237 0 29.927 12.511 12.69 12.512 12.69 29.845 0 17.716-12.69 30.086-12.69 12.37-29.927 12.37H414.82Zm0-245.167q-18.044 0-30.497-12.32t-12.453-30.037q0-17.716 12.453-30.086 12.453-12.369 30.497-12.369h392.767q17.237 0 29.927 12.486 12.69 12.487 12.69 30.203 0 17.717-12.69 29.92-12.69 12.203-29.927 12.203H414.82ZM189.379-156.681q-32.652 0-55.878-22.829t-23.226-55.731q0-32.549 23.15-55.647 23.151-23.097 55.95-23.097 32.799 0 55.313 23.484 22.515 23.484 22.515 56.246 0 32.212-22.861 54.893-22.861 22.681-54.963 22.681Zm0-245.167q-32.652 0-55.878-23.134-23.226-23.135-23.226-55.623 0-32.487 23.467-55.517t56.12-23.03q32.102 0 54.721 23.288 22.62 23.288 22.62 55.775 0 32.488-22.861 55.364-22.861 22.877-54.963 22.877Zm-.82-244.833q-32.224 0-55.254-23.288-23.03-23.289-23.03-55.623 0-32.333 23.271-55.364 23.272-23.03 55.495-23.03 32.224 0 55.193 23.288 22.969 23.289 22.969 55.622 0 32.334-23.21 55.364-23.21 23.031-55.434 23.031Z"/></svg>
+                </label>
+                <div class="toc-content">
+                    
+
+<div class="toc-container">
+    
+
+    <ul>
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#background">Background</a>
+                    
+                        <ul>
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#deciding-what-to-build">Deciding What to Build</a>
+                                        
+                                    </li>
+                                
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#getting-started">Getting Started</a>
+                    
+                </li>
+            
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#implementation-experience">Implementation Experience</a>
+                    
+                        <ul>
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#creating-the-task-struct">Creating the Task struct</a>
+                                        
+                                            <ul>
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#enums">Enums</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#field-naming">Field Naming</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#json-field-names">JSON Field Names</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#the-final-task-struct">The Final Task Struct</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                            </ul>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#creating-the-task-manager">Creating the Task Manager</a>
+                                        
+                                            <ul>
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#the-getduedate-function-pointer">The getDueDate Function Pointer</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                                    
+                                                        <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#pointers-for-status-and-priority">Pointers for Status and Priority</a>
+                                                            
+                                                        </li>
+                                                    
+                                                
+                                            </ul>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#creating-the-commands">Creating the Commands</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#wiring-it-up">Wiring it Up</a>
+                                        
+                                    </li>
+                                
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#conclusion">Conclusion</a>
+                    
+                        <ul>
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#what-i-liked">What I Liked</a>
+                                        
+                                    </li>
+                                
+                            
+                                
+                                    <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#what-i-disliked">What I Disliked</a>
+                                        
+                                    </li>
+                                
+                            
+                        </ul>
+                    
+                </li>
+            
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/giving-golang-a-try/#final-thoughts">Final Thoughts</a>
+                    
+                </li>
+            
+        
+    </ul>
+</div>
+
+
+                </div>
+            </div>
+        
+
+        
+        
+
+        
+        <a href="#" id="top-button" class="no-hover-padding" title="Go to the top of the page">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"/></svg>
+        </a>
+    </div>
+
+
+<link rel="stylesheet" href="https://www.stevexciv.com/katex.min.css">
+    <script defer src="https://www.stevexciv.com/js/katex.min.js"></script><span id="copy-success" class="hidden">
+        Copied!
+    </span>
+    <span id="copy-init" class="hidden">
+        Copy code to clipboard
+    </span>
+    <script defer src="https://www.stevexciv.com/js/copyCodeToClipboard.min.js"></script>
+
+
+    </div>
+    <footer>
+    <section>
+        <nav class="socials nav-navs"><ul><li>
+                        <a class="nav-links no-hover-padding social" rel="" 
+
+ href="https://www.stevexciv.com/atom.xml">
+                        <img loading="lazy" alt="feed" title="feed" src="https://www.stevexciv.com/social_icons/rss.svg">
+                        </a>
+                    </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://github.com/SteveXCIV/">
+                                    <img loading="lazy" alt="github" title="github" src="https://www.stevexciv.com/social_icons/github.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://www.linkedin.com/in/steve-troetti">
+                                    <img loading="lazy" alt="linkedin" title="linkedin" src="https://www.stevexciv.com/social_icons/linkedin.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://bsky.app/profile/stevexciv.com">
+                                    <img loading="lazy" alt="bluesky" title="bluesky" src="https://www.stevexciv.com/social_icons/bluesky.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://mastodon.social/@stevexciv">
+                                    <img loading="lazy" alt="mastodon" title="mastodon" src="https://www.stevexciv.com/social_icons/mastodon.svg">
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            
+        </nav>
+
+        
+        <nav class="nav-navs">
+        </nav>
+
+        <div class="credits">
+            <small>
+                
+    
+    
+    
+    
+        
+    
+        
+    
+
+    
+
+    
+    
+    
+
+    
+    
+    <p><p>© 2025 Steve Troetti • Unless otherwise noted, the content in this website is available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> license.</p>
+</p>
+
+                
+                Powered by
+                <a rel="" 
+
+ href="https://www.getzola.org">Zola</a>
+                &amp;
+                <a rel="" 
+
+ href="https://github.com/welpo/tabi">tabi</a>
+
+                </small>
+        </div>
+    </section>
+
+    <div id="searchModal" class="search-modal js" role="dialog" aria-labelledby="modalTitle">
+    <h1 id="modalTitle" class="visually-hidden">Search</h1>
+    <div id="modal-content">
+        <div id="searchBar">
+            <div class="search-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                    <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                </svg>
+            </div>
+            <input id="searchInput" role="combobox" autocomplete="off" spellcheck="false" aria-expanded="false" aria-controls="results-container" placeholder="Search…"/>
+            <div id="clear-search" class="close-icon interactive-icon" tabindex="0" role="button" title="Clear search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                </svg>
+            </div>
+        </div>
+        <div id="results-container">
+            <div id="results-info"><span id="zero_results"> No results</span>
+                <span id="one_results"> $NUMBER result</span>
+                <span id="many_results"> $NUMBER results</span><span id="two_results"> $NUMBER results</span>
+                <span id="few_results"> $NUMBER results</span>
+            </div>
+            <div id="results" role="listbox"></div>
+        </div>
+    </div>
+</div>
+</footer>
+
+</body>
+
+</html>

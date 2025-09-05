@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8"><meta http-equiv="Content-Security-Policy"
+content="default-src 'self';font-src &#x27;self&#x27; data:;img-src &#x27;self&#x27; https:&#x2F;&#x2F;* data:;media-src &#x27;self&#x27;;style-src &#x27;self&#x27;;frame-src player.vimeo.com https:&#x2F;&#x2F;www.youtube-nocookie.com;connect-src 'self';script-src 'self' 'self'">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="base" content="https://www.stevexciv.com">
+
+    
+    <title>
+Back to Blogging • Steve Troetti's Blog</title>
+
+    
+    
+        <link rel="icon" type="image/png" href="https://www.stevexciv.com/images/favicon.ico"/>
+    
+    
+
+    
+    
+        
+            
+            
+                
+                    <link rel="alternate" type="application/atom+xml" title="Steve Troetti's Blog - Atom Feed" href="https://www.stevexciv.com/atom.xml">
+                
+            
+                
+                    <link rel="alternate" type="application/rss+xml" title="Steve Troetti's Blog - RSS Feed" href="https://www.stevexciv.com/rss.xml">
+                
+            
+        
+    
+
+    
+    
+    
+        
+            <link rel="stylesheet" href="https://www.stevexciv.com/custom_subset.css?h=0b9535a28bc3d5bf2321">
+        
+    
+
+    
+        <link rel="stylesheet" href="https://www.stevexciv.com/main.css?h=8fdd91b344907eec17e2" />
+        <link rel="stylesheet" href="https://www.stevexciv.com/skins/lowcontrast_orange.css?h=43aaccb17d8ec616ace4" />
+
+    <meta name="color-scheme" content="dark" />
+        <meta name="description" content="An introductory post that talks about setting up Zola." />
+        <meta property="og:description" content="An introductory post that talks about setting up Zola." />
+
+    
+
+    <meta property="og:title" content="Back to Blogging" />
+    <meta property="og:type" content="article" />
+
+    
+<meta property="og:locale" content="en_GB" />
+
+    <meta property="og:url" content="https:&#x2F;&#x2F;www.stevexciv.com&#x2F;blog&#x2F;back-to-blogging&#x2F;" /><meta property="og:site_name" content="Steve Troetti&#x27;s Blog"><script defer src="https://www.stevexciv.com/search_index.en.js?h=23565f36ca1bebd67f9b"></script>
+        <script defer src="https://www.stevexciv.com/js/searchElasticlunr.min.js?h=3626c0ef99daa745b31e"></script>
+
+        </head>
+
+
+<body>
+    <header>
+    <nav class="navbar">
+        <div class="nav-title">
+            <a class="home-title" href="https://www.stevexciv.com">Steve Troetti&#x27;s Blog</a>
+        </div>
+            <div class="nav-navs">
+                <ul>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding" href="https://www.stevexciv.com/blog/">blog
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding" href="https://www.stevexciv.com/tags/">tags
+                                </a>
+                            </li>
+                        <li class="menu-icons-container">
+                        <ul class="menu-icons-group">
+                            <li class="js menu-icon">
+                                <div role="button" tabindex="0" id="search-button" class="search-icon interactive-icon" title="Click or press $SHORTCUT to open search" aria-label="Click or press $SHORTCUT to open search">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                                        <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                                    </svg>
+                                </div>
+                            </li>
+
+                            
+                            
+
+                            </ul>
+                    </li>
+                </ul>
+            </div>
+        
+    </nav>
+</header>
+
+    <div class="content">
+
+        
+        
+
+
+
+
+<main>
+    <article>
+        <h1 class="article-title">
+            Back to Blogging
+        </h1>
+
+        <ul class="meta">
+                <li>4th Feb 2024</li><li title="513 words"><span class='separator' aria-hidden='true'>•</span>3 min read</li><li class="tag"><span class='separator' aria-hidden='true'>•</span>Tags:&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/announcements/">announcements</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/zola/">zola</a>,&nbsp;</li><li class="tag"><a href="https://www.stevexciv.com/tags/tabi/">tabi</a></li></ul><ul class="meta last-updated"><li>Updated on 4th Feb 2024</li>
+        </ul>
+
+        <section class="body"><h1 id="spring-cleaning"><a class="header-anchor no-hover-padding" href="#spring-cleaning" aria-label="Anchor link for: spring-cleaning"><span class="link-icon" aria-hidden="true"></span></a>
+Spring Cleaning</h1>
+<p>I was recently going through my repositories and cleaning up old stuff I knew I
+probably wouldn't touch again.
+It's not spring yet, but I tend to get my fill of winter somewhere around the
+21st of December every year anyway, so I'll allow myself to do some early spring
+cleaning.</p>
+<p>As I was going through my list of repositories, I saw the one that backs this
+site.
+The last time I had touched it was when I was about as surprised as everyone
+else to hear about the <a href="https://blog.pragmaticengineer.com/google-domains-to-shut-down/">untimely demise of Google Domains</a>.
+I opted to switch providers on hearing that news, and I needed to tweak repository
+settings when I was setting up the new CNAME records.
+Prior to that whole incident, I hadn't touched my blog in <em>years</em>.
+Suffice to say it was getting a bit dusty.</p>
+<p>My only post on the old blog was about how I couldn't make a Jekyll theme I liked
+so I just ended up choosing a default one.
+Well, things are a lot different now than when I wrote that.
+With GitHub supporting a full suite of CI/CD goodies and having a pretty good
+free tier, Jekyll is far from the only (good) option for getting a site on GH
+pages.
+I never really knew much Ruby anyway, so it was right about that moment that I
+decided to seek out another static site generator (SSG).</p>
+<h1 id="enter-zola"><a class="header-anchor no-hover-padding" href="#enter-zola" aria-label="Anchor link for: enter-zola"><span class="link-icon" aria-hidden="true"></span></a>
+Enter Zola</h1>
+<p>If the 🦀 crab emoji on my homepage's "about me" blurb didn't give it away, I
+like Rust.
+Not the reddish brown stuff that weathers ferrous items, but the programming
+language that <a href="https://github.blog/2023-08-30-why-rust-is-the-most-admired-language-among-developers/">continues to take the world by storm</a>.
+When considering what SSG I wanted to go with, it was important to me that I
+found one in a language that I, a: know, and b: enjoy working with.
+Rust checks both of these boxes for me, so I was pretty happy when I came across
+<a href="https://getzola.org">Zola</a>.
+Zola is written in Rust, which to me means that I can troubleshoot it more easily,
+and I could potentially contribute at some point down the line.</p>
+<p>I looked around a bit and also ended up finding the excellent theme <a href="https://github.com/welpo/tabi">tabi</a>.
+It's loaded with configuration to customize my blog exactly how I please,
+it's secure by default, and the project's <a href="https://welpo.github.io/tabi/">own GH pages</a>
+uses tabi (of course), and serves as project documentation - <em>neat</em>.</p>
+<p>Zola also has excellent documentation for getting set up on GH Pages, and there's
+a <a href="https://github.com/shalzz/zola-deploy-action">custom GH Action</a> for deploying.</p>
+<p>Overall, I'm quite happy with how this turned out.
+So maybe this time around I'll actually take the time to write about some of
+the things I'm working on in my personal time 😅.</p>
+<p>All-in-all, it's been a good weekend doing some spring cleaning, and now my blog
+is powered by Rust, and that's always a plus.</p>
+
+        </section>
+
+        
+                
+                
+                    
+                        
+                        
+                        
+                    
+                    
+                
+                
+            <nav class="full-width article-navigation">
+                <div><a href="https://www.stevexciv.com/blog/creative-coding-generating-banner-images/" aria-label="Next" aria-describedby="left_title"><span class="arrow">←</span>&nbsp;Next</a>
+                <p aria-hidden="true" id="left_title">Creative Coding: Generating Banner Images</p></div>
+                <div></div>
+            </nav>
+        
+        
+
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+            
+            
+            
+
+            
+        
+        
+
+    </article>
+</main>
+
+    <div id="button-container">
+        
+        
+            <div id="toc-floating-container">
+                <input type="checkbox" id="toc-toggle" class="toggle"/>
+                <label for="toc-toggle" class="overlay"></label>
+                <label for="toc-toggle" id="toc-button" class="button" title="Toggle Table of Contents">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M414.82-193.094q-18.044 0-30.497-12.32-12.453-12.319-12.453-30.036t12.453-30.086q12.453-12.37 30.497-12.37h392.767q17.237 0 29.927 12.487 12.69 12.486 12.69 30.203 0 17.716-12.69 29.919t-29.927 12.203H414.82Zm0-244.833q-18.044 0-30.497-12.487Q371.87-462.9 371.87-480.45t12.453-29.92q12.453-12.369 30.497-12.369h392.767q17.237 0 29.927 12.511 12.69 12.512 12.69 29.845 0 17.716-12.69 30.086-12.69 12.37-29.927 12.37H414.82Zm0-245.167q-18.044 0-30.497-12.32t-12.453-30.037q0-17.716 12.453-30.086 12.453-12.369 30.497-12.369h392.767q17.237 0 29.927 12.486 12.69 12.487 12.69 30.203 0 17.717-12.69 29.92-12.69 12.203-29.927 12.203H414.82ZM189.379-156.681q-32.652 0-55.878-22.829t-23.226-55.731q0-32.549 23.15-55.647 23.151-23.097 55.95-23.097 32.799 0 55.313 23.484 22.515 23.484 22.515 56.246 0 32.212-22.861 54.893-22.861 22.681-54.963 22.681Zm0-245.167q-32.652 0-55.878-23.134-23.226-23.135-23.226-55.623 0-32.487 23.467-55.517t56.12-23.03q32.102 0 54.721 23.288 22.62 23.288 22.62 55.775 0 32.488-22.861 55.364-22.861 22.877-54.963 22.877Zm-.82-244.833q-32.224 0-55.254-23.288-23.03-23.289-23.03-55.623 0-32.333 23.271-55.364 23.272-23.03 55.495-23.03 32.224 0 55.193 23.288 22.969 23.289 22.969 55.622 0 32.334-23.21 55.364-23.21 23.031-55.434 23.031Z"/></svg>
+                </label>
+                <div class="toc-content">
+                    
+
+<div class="toc-container">
+    
+
+    <ul>
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/back-to-blogging/#spring-cleaning">Spring Cleaning</a>
+                    
+                </li>
+            
+        
+            
+            
+                <li><a href="https://www.stevexciv.com/blog/back-to-blogging/#enter-zola">Enter Zola</a>
+                    
+                </li>
+            
+        
+    </ul>
+</div>
+
+
+                </div>
+            </div>
+        
+
+        
+        
+
+        
+        <a href="#" id="top-button" class="no-hover-padding" title="Go to the top of the page">
+            <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z"/></svg>
+        </a>
+    </div>
+
+
+<link rel="stylesheet" href="https://www.stevexciv.com/katex.min.css">
+    <script defer src="https://www.stevexciv.com/js/katex.min.js"></script><span id="copy-success" class="hidden">
+        Copied!
+    </span>
+    <span id="copy-init" class="hidden">
+        Copy code to clipboard
+    </span>
+    <script defer src="https://www.stevexciv.com/js/copyCodeToClipboard.min.js"></script>
+
+
+    </div>
+    <footer>
+    <section>
+        <nav class="socials nav-navs"><ul><li>
+                        <a class="nav-links no-hover-padding social" rel="" 
+
+ href="https://www.stevexciv.com/atom.xml">
+                        <img loading="lazy" alt="feed" title="feed" src="https://www.stevexciv.com/social_icons/rss.svg">
+                        </a>
+                    </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://github.com/SteveXCIV/">
+                                    <img loading="lazy" alt="github" title="github" src="https://www.stevexciv.com/social_icons/github.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://www.linkedin.com/in/steve-troetti">
+                                    <img loading="lazy" alt="linkedin" title="linkedin" src="https://www.stevexciv.com/social_icons/linkedin.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://bsky.app/profile/stevexciv.com">
+                                    <img loading="lazy" alt="bluesky" title="bluesky" src="https://www.stevexciv.com/social_icons/bluesky.svg">
+                                </a>
+                            </li>
+                        
+                            <li>
+                                <a class="nav-links no-hover-padding social" rel=" me" 
+
+ href="https://mastodon.social/@stevexciv">
+                                    <img loading="lazy" alt="mastodon" title="mastodon" src="https://www.stevexciv.com/social_icons/mastodon.svg">
+                                </a>
+                            </li>
+                        
+                    
+                </ul>
+            
+        </nav>
+
+        
+        <nav class="nav-navs">
+        </nav>
+
+        <div class="credits">
+            <small>
+                
+    
+    
+    
+    
+        
+    
+        
+    
+
+    
+
+    
+    
+    
+
+    
+    
+    <p><p>© 2025 Steve Troetti • Unless otherwise noted, the content in this website is available under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> license.</p>
+</p>
+
+                
+                Powered by
+                <a rel="" 
+
+ href="https://www.getzola.org">Zola</a>
+                &amp;
+                <a rel="" 
+
+ href="https://github.com/welpo/tabi">tabi</a>
+
+                </small>
+        </div>
+    </section>
+
+    <div id="searchModal" class="search-modal js" role="dialog" aria-labelledby="modalTitle">
+    <h1 id="modalTitle" class="visually-hidden">Search</h1>
+    <div id="modal-content">
+        <div id="searchBar">
+            <div class="search-icon" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                    <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+                </svg>
+            </div>
+            <input id="searchInput" role="combobox" autocomplete="off" spellcheck="false" aria-expanded="false" aria-controls="results-container" placeholder="Search…"/>
+            <div id="clear-search" class="close-icon interactive-icon" tabindex="0" role="button" title="Clear search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+                </svg>
+            </div>
+        </div>
+        <div id="results-container">
+            <div id="results-info"><span id="zero_results"> No results</span>
+                <span id="one_results"> $NUMBER result</span>
+                <span id="many_results"> $NUMBER results</span><span id="two_results"> $NUMBER results</span>
+                <span id="few_results"> $NUMBER results</span>
+            </div>
+            <div id="results" role="listbox"></div>
+        </div>
+    </div>
+</div>
+</footer>
+
+</body>
+
+</html>
